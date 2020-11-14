@@ -12,9 +12,6 @@ public class Customer {
 	
 	public String accountsToString() {
 		String s = "";
-		if (accounts.size() == 0) {
-			return "No accounts found for this user";
-		}
 		for(Account a : accounts) {
 			s += a.toString();
 		}

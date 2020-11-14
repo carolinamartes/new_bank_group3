@@ -16,9 +16,9 @@ public class NewBank {
 		Customer bhagy = new Customer();
 		bhagy.addAccount(new Account("Main", 1000.0));
 		customers.put("Bhagy", bhagy);
-
-		// Tests a customer with no accounts
+		
 		Customer christina = new Customer();
+		christina.addAccount(new Account("Savings", 1500.0));
 		customers.put("Christina", christina);
 		
 		Customer john = new Customer();
