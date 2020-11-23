@@ -51,7 +51,7 @@ public class NewBankClientHandler extends Thread {
 					System.out.println("Request from " + customer.getKey());
 
 					if (bank.validator(customer) == "valid"){
-						//if request is a number
+						
 							processRequest(request);
 						}
 					else {
