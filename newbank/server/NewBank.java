@@ -37,19 +37,10 @@ public class NewBank {
 		return null;
 	}
 
-	// commands from the NewBank customer are processed in this method
-	public synchronized String processRequest(CustomerID customer, String request) {
+	public synchronized String validator(CustomerID customer) {
 		if(customers.containsKey(customer.getKey())) {
-			switch(request) {
-			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
-			default : return "FAIL";
-			}
+			return "valid";
 		}
-		return "FAIL";
+		return "invalid";
 	}
-	
-	private String showMyAccounts(CustomerID customer) {
-		return (customers.get(customer.getKey())).accountsToString();
-	}
-
 }
