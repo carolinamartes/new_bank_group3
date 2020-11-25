@@ -43,7 +43,12 @@ public class ExampleClient extends Thread{
 				while(true) {
 					String command = userInput.readLine();
 					bankServerOut.println(command);
-				}				
+					if(command.equals("LOGOUT")){
+						bankServerOut.close();
+						server.close();
+						System.exit(0);
+					}
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
