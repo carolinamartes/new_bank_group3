@@ -52,7 +52,7 @@ public class NewBankClientHandler extends Thread {
 
 					if (bank.validator(customer) == "valid"){
 						
-							processRequest(request);
+							processRequest(customer, request);
 						}
 					else {
 						out.println("FAIL");
@@ -76,11 +76,11 @@ public class NewBankClientHandler extends Thread {
 		}
 	}
 
-	public synchronized void processRequest(String request) {
+	public synchronized void processRequest(CustomerID customer, String request) {
 		//add relevant code here
 		switch (request) {
 			case "SHOWMYACCOUNTS" :
-				menuPrinter.printShowAccounts();
+				NewBank.showMyAccounts(customer);
 				state.push(request);
 				break;
 			case "NEWACCOUNT" :
@@ -93,7 +93,7 @@ public class NewBankClientHandler extends Thread {
 				break;
 			case "BACK" :
 				request = state.pop();
-				processRequest(request);
+				processRequest(customer, request);
 				break;
 			case "1" :
 			case "2" :
