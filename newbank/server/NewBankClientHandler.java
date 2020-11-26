@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Stack;
 
 public class NewBankClientHandler extends Thread {
-	
+
 	private final NewBank bank;
 	private final BufferedReader in;
 	private final PrintWriter out;
@@ -21,7 +21,7 @@ public class NewBankClientHandler extends Thread {
 		out = new PrintWriter(s.getOutputStream(), true);
 		menuPrinter = new MenuPrinter(s);
 	}
-	
+
 	public void run() {
 
 		menuPrinter.printLogo();
@@ -51,9 +51,9 @@ public class NewBankClientHandler extends Thread {
 					System.out.println("Request from " + customer.getKey());
 
 					if (bank.validator(customer) == "valid"){
-						
-							processRequest(request);
-						}
+
+						processRequest(request);
+					}
 					else {
 						out.println("FAIL");
 					}
