@@ -87,6 +87,18 @@ public class NewBankClientHandler extends Thread {
 				menuPrinter.printNewAccountsPg1();
 				state.push(request);
 				break;
+			case "BALANCE" :
+				menuPrinter.getBalance(customer);
+				state.push(request);
+				break;
+			case "DEPOSIT" :
+				menuPrinter.depositFunds(customer);
+				state.push(request);
+				break;
+			case "WITHDRAW" :
+				menuPrinter.withdrawFunds(customer);
+				state.push(request);
+				break;
 			case "LOGOUT" :
 				menuPrinter.printLogOut();
 				state.push(request);

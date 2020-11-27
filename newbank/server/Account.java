@@ -18,6 +18,17 @@ public class Account {
 
 	}
 
+	public double getBalance(){
+		return this.currentBalance;
+	}
+
+	public void addTransaction(double amount, String memo){
+
+		//create a new transaction object and add it to our list
+		Transaction newTrans = new Transaction(amount, memo, this);
+		this.transactions.add(newTrans);
+	}
+
 	public String toString() {
 		return (accountName + ": " + currentBalance);
 	}
