@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class NewBank {
 	
 	private static final NewBank bank = new NewBank();
-	private HashMap<String,Customer> customers;
+	private static HashMap<String,Customer> customers;
 	
 	private NewBank() {
 		customers = new HashMap<>();
@@ -15,6 +15,7 @@ public class NewBank {
 	private void addTestData() {
 		Customer bhagy = new Customer();
 		bhagy.addAccount(new Account("Main", 1000.0));
+		bhagy.addAccount(new Account("Savings", 20.0));
 		customers.put("Bhagy", bhagy);
 
 		// Tests a customer with no accounts
@@ -42,5 +43,9 @@ public class NewBank {
 			return "valid";
 		}
 		return "invalid";
+	}
+
+	public static void showMyAccounts(CustomerID customer) {
+		customers.get(customer.getKey()).printAccountBalance();
 	}
 }
