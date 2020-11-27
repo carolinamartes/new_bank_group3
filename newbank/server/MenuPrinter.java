@@ -39,6 +39,36 @@ public class MenuPrinter {
         out.println(s);
     }
 
+    public static void printTransferableTo(ArrayList<Account> accounts, int fromAccountID) {
+        Account fromAccount = accounts.get(fromAccountID);
+        out.println("Select an account to transfer to:");
+        for(int i=0; i < accounts.size();i++){
+            int current = i + 1;
+            if (!accounts.get(i).equals(fromAccount)) {
+                out.print("(" + current + ") ");
+                out.println(accounts.get(i).getAccountName());
+            }
+        }
+    }
+
+    public static void askTransferQuantity(){
+        out.println("How much would you like to transfer? Write TRANSFERAMOUNT {{amount}}");
+    }
+
+    public static void printTransferableFrom(ArrayList<Account> accounts){
+        out.flush();
+        if (accounts.size() == 0){
+            out.println("No valid accounts found for this user");
+        }
+
+        out.println("Select an account to transfer from:");
+        for(int i=0; i < accounts.size();i++){
+            int current = i + 1;
+            out.print("("+ current +") ");
+            out.println(accounts.get(i).getAccountName());
+        }
+    }
+
     public static void printNewAccountsPg1(){
         out.flush();
       //print new account options page 1

@@ -48,4 +48,17 @@ public class NewBank {
 	public static void showMyAccounts(CustomerID customer) {
 		customers.get(customer.getKey()).printAccountBalance();
 	}
+
+	public static void showTransferFromOptions(CustomerID customer, double requestAmount) {
+		customers.get(customer.getKey()).printTransferableFromAccounts(requestAmount);
+	}
+
+	public static void showTransferToOptions(CustomerID customer, int fromAccount) {
+		customers.get(customer.getKey()).printTransferableToAccounts(fromAccount);
+	}
+
+	public static void executeTransfer(CustomerID customer, int fromAccount, int toAccount, double requestAmount){
+		customers.get(customer.getKey()).executeTransfer(fromAccount, toAccount, requestAmount);
+	}
+
 }
