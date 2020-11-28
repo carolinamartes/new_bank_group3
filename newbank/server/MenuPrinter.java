@@ -3,7 +3,6 @@ package newbank.server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class MenuPrinter {
 
@@ -27,16 +26,19 @@ public class MenuPrinter {
         out.println();
     }
 
-    public static void printShowAccounts(ArrayList<Account> accounts){
+    public static void printShowAccounts() {
         out.flush();
-        String s = "";
-        if (accounts.size() == 0) {
-            out.println("No accounts found for this user");
-        }
-        for(Account a : accounts) {
-            s += a.toString() + " ";
-        }
+        //print accounts
+        //for(int i = 0; i <= numofaccounts; i++)
+        //System.out.println("(i)" + accountname: + openingbalance);
+        //System.out.println("(i)" + sortcode/ + accountnumber);
+    }
+    public static void printShowAccounts(String s){
+        out.flush();
+        out.println("Here are your New Bank accounts:");
         out.println(s);
+
+        System.out.println("printShowAccounts");
     }
 
     public static void printNewAccountsPg1(){

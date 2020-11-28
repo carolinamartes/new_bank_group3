@@ -7,8 +7,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Stack;
 
+
 public class NewBankClientHandler extends Thread {
-	
+
 	private final NewBank bank;
 	private final BufferedReader in;
 	private final PrintWriter out;
@@ -21,7 +22,7 @@ public class NewBankClientHandler extends Thread {
 		out = new PrintWriter(s.getOutputStream(), true);
 		menuPrinter = new MenuPrinter(s);
 	}
-	
+
 	public void run() {
 
 		menuPrinter.printLogo();
@@ -40,32 +41,28 @@ public class NewBankClientHandler extends Thread {
 			CustomerID customer = bank.checkLogInDetails(userName, password);
 
 			// if the user is authenticated then get requests from the user and process them 
-			if(customer != null) {
+			if (customer != null) {
 
 				out.println("Log In Successful. What do you want to do?");
 
-				while(true) {
+				while (true) {
 
 					String request = in.readLine();
 
 					System.out.println("Request from " + customer.getKey());
 
-					if (bank.validator(customer) == "valid"){
-						
-							processRequest(customer, request);
-						}
-					else {
+					if (bank.validator(customer) == "valid") {
+						processRequest(request, customer);
+					} else {
 						out.println("FAIL");
 					}
 				}
-			}
-			else {
+			} else {
 				out.println("Log In Failed");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				in.close();
 				out.close();
@@ -76,35 +73,38 @@ public class NewBankClientHandler extends Thread {
 		}
 	}
 
-	public synchronized void processRequest(CustomerID customer, String request) {
+	public synchronized void processRequest(String request, CustomerID customer) {
 		//add relevant code here
+		Customer f = bank.getCustomer(customer.getKey());
 		switch (request) {
-			case "SHOWMYACCOUNTS" :
-				NewBank.showMyAccounts(customer);
+			case "SHOWMYACCOUNTS":
+				menuPrinter.printShowAccounts();
+				String s = f.accountsToString();
+				menuPrinter.printShowAccounts(s);
 				state.push(request);
 				break;
-			case "NEWACCOUNT" :
+			case "NEWACCOUNT":
 				menuPrinter.printNewAccountsPg1();
 				state.push(request);
 				break;
-			case "LOGOUT" :
+			case "LOGOUT":
 				menuPrinter.printLogOut();
 				state.push(request);
 				break;
-			case "BACK" :
+			case "BACK":
 				request = state.pop();
-				processRequest(customer, request);
+				processRequest(request, customer);
 				break;
-			case "1" :
-			case "2" :
-				if (state.peek().equals("NEWACCOUNT")){
+			case "1":
+			case "2":
+				if (state.peek().equals("NEWACCOUNT")) {
 					menuPrinter.printNewAccountsPg2();
 					break;
 				} else {
 					out.println("Invalid Request");
 					break;
 				}
-			default :
+			default:
 				menuPrinter.printFail();
 				break;
 		}
