@@ -51,12 +51,6 @@ public class NewBank {
 
 
 
-	/*public synchronized String validator(CustomerID customer) {
-		if(customers.containsKey(customer.getKey())) {
-			return "valid";
-		}
-		return "invalid";
-	}*/
 
 	public static void showMyAccounts(CustomerID customer) {
 		customers.get(customer.getKey()).printAccountBalance();
