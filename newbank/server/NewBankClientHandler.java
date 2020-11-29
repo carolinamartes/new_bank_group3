@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Stack;
 
 public class NewBankClientHandler extends Thread {
-	
+
 	private final NewBank bank;
 	private final BufferedReader in;
 	private final PrintWriter out;
@@ -24,7 +24,33 @@ public class NewBankClientHandler extends Thread {
 		out = new PrintWriter(s.getOutputStream(), true);
 		menuPrinter = new MenuPrinter(s);
 	}
-	
+
+	public CustomerID login() throws IOException {
+		//User will get 3 chances
+		int attempt = 0;
+		while (attempt < 3) {
+			out.println("Enter details for login");
+			out.println("Enter Username");
+			// ask for user name
+			String userName = in.readLine();
+			// ask for password
+			out.println("Enter Password");
+			String password = in.readLine();
+			out.println("Checking Details...");
+			// authenticate user and get customer ID token from bank for use in subsequent requests
+			CustomerID customer = bank.checkLogInDetails(userName, password);
+			// if the user is authenticated then get requests from the user and process them
+			if (customer != null)
+				return customer;
+			out.println("Invalid Username or Password");
+			attempt++;
+		}
+		System.out.println("You have entered an incorrect User or password three times, please try again later.");
+		System.exit(-1);
+		return null;
+
+	}
+
 	public void run() {
 
 		menuPrinter.printLogo();
@@ -42,7 +68,7 @@ public class NewBankClientHandler extends Thread {
 			// authenticate user and get customer ID token from bank for use in subsequent requests
 			CustomerID customer = bank.checkLogInDetails(userName, password);
 
-			// if the user is authenticated then get requests from the user and process them 
+			// if the user is authenticated then get requests from the user and process them
 			if(customer != null) {
 
 				out.println("Log In Successful. What do you want to do?");
@@ -52,15 +78,10 @@ public class NewBankClientHandler extends Thread {
 					String request = in.readLine();
 
 					System.out.println("Request from " + customer.getKey());
+					processRequest(customer, request);
 
-					if (bank.validator(customer) == "valid"){
-						
-							processRequest(customer, request);
-						}
-					else {
-						out.println("FAIL");
 					}
-				}
+
 			}
 			else {
 				out.println("Log In Failed");
@@ -142,5 +163,3 @@ public class NewBankClientHandler extends Thread {
 		}
 	}
 }
-
-
