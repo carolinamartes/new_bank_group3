@@ -18,6 +18,22 @@ public class Account {
 
 	}
 
+	public double getCurrentBalance (){
+		return currentBalance;
+	}
+
+	public void withdraw (double withdrawAmount) {
+		currentBalance-= withdrawAmount;
+	}
+
+	public void deposit (double depositAmount) {
+		currentBalance+= depositAmount;
+	}
+
+	public String getAccountName (){
+		return accountName;
+	}
+
 	public String toString() {
 		return (accountName + ": " + currentBalance);
 	}

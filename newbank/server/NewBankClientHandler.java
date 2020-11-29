@@ -14,6 +14,9 @@ public class NewBankClientHandler extends Thread {
 	private final PrintWriter out;
 	private final MenuPrinter menuPrinter;
 	private static Stack<String> state = new Stack<String>();
+	int fromAccountIndex = 0;
+	int toAccountIndex = 0;
+	double requestAmount = 0.0;
 
 	public NewBankClientHandler(Socket s) throws IOException {
 		bank = NewBank.getBank();
@@ -77,10 +80,29 @@ public class NewBankClientHandler extends Thread {
 	}
 
 	public synchronized void processRequest(CustomerID customer, String request) {
-		//add relevant code here
+		if (request.equals("1") || request.equals("2")){
+			System.out.println("HERE");
+			if (state.peek().equals("TRANSFERFROM")) {
+				fromAccountIndex = Integer.parseInt(request) - 1;
+			}
+			if (state.peek().equals("TRANSFERTO")) {
+				toAccountIndex = Integer.parseInt(request) - 1;
+			}
+		}
+		if (request.startsWith("TRANSFERAMOUNT")){
+			String requestString = request;
+			requestAmount = Double.parseDouble(requestString.replace("TRANSFERAMOUNT ", ""));
+			NewBank.showTransferFromOptions(customer, requestAmount);
+			state.push("TRANSFERFROM");
+			return;
+		}
 		switch (request) {
 			case "SHOWMYACCOUNTS" :
 				NewBank.showMyAccounts(customer);
+				state.push(request);
+				break;
+			case "MOVEMYMONEY" :
+				menuPrinter.askTransferQuantity();
 				state.push(request);
 				break;
 			case "NEWACCOUNT" :
@@ -100,7 +122,17 @@ public class NewBankClientHandler extends Thread {
 				if (state.peek().equals("NEWACCOUNT")){
 					menuPrinter.printNewAccountsPg2();
 					break;
-				} else {
+				}
+				if (state.peek().equals("TRANSFERFROM")){
+					NewBank.showTransferToOptions(customer, fromAccountIndex);
+					state.push("TRANSFERTO");
+					break;
+				}
+				if (state.peek().equals("TRANSFERTO")){
+					NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
+					break;
+				}
+				else {
 					out.println("Invalid Request");
 					break;
 				}
