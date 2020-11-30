@@ -24,13 +24,8 @@ public class Customer {
 		MenuPrinter.printTransferableFrom(transferableFromAccounts);
 	}
 
-	public void printDepositToAccounts(double requestAmount) {
+	public void printDepositToAccounts() {
 		ArrayList<Account> depositToAccounts = new ArrayList<Account>();
-		for(Account a : accounts) {
-			if (a.getCurrentBalance() >= requestAmount){
-				depositToAccounts.add(a);
-			}
-		}
 		MenuPrinter.printDepositTo(depositToAccounts);
 	}
 

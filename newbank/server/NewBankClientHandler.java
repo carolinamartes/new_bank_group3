@@ -106,7 +106,7 @@ public class NewBankClientHandler extends Thread {
 		if (request.startsWith("DEPOSITAMOUNT")){
 			String requestString = request;
 			requestAmount = Double.parseDouble(requestString.replace("DEPOSITAMOUNT ", ""));
-			NewBank.showDepositOptions(customer, requestAmount);
+			NewBank.showDepositOptions(customer);
 			state.push("DEPOSIT");
 			return;
 		}

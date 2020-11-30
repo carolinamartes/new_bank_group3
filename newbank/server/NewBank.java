@@ -57,8 +57,8 @@ public class NewBank {
 		customers.get(customer.getKey()).printTransferableToAccounts(fromAccount);
 	}
 
-	public static void showDepositOptions(CustomerID customer, double requestAmount) {
-		customers.get(customer.getKey()).printDepositToAccounts(requestAmount);
+	public static void showDepositOptions(CustomerID customer) {
+		customers.get(customer.getKey()).printDepositToAccounts();
 	}
 
 	public static void executeTransfer(CustomerID customer, int fromAccount, int toAccount, double requestAmount){
