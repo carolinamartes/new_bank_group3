@@ -96,6 +96,20 @@ public class NewBankClientHandler extends Thread {
 			state.push("TRANSFERFROM");
 			return;
 		}
+		if (request.startsWith("WITHDRAWAMOUNT")){
+			String requestString = request;
+			requestAmount = Double.parseDouble(requestString.replace("WITHDRAWAMOUNT ", ""));
+			NewBank.showTransferFromOptions(customer, requestAmount);
+			state.push("WITHDRAW");
+			return;
+		}
+		if (request.startsWith("DEPOSITAMOUNT")){
+			String requestString = request;
+			requestAmount = Double.parseDouble(requestString.replace("DEPOSITAMOUNT ", ""));
+			NewBank.showDepositOptions(customer, requestAmount);
+			state.push("DEPOSIT");
+			return;
+		}
 		switch (request) {
 			case "SHOWMYACCOUNTS" :
 				NewBank.showMyAccounts(customer);
@@ -103,6 +117,14 @@ public class NewBankClientHandler extends Thread {
 				break;
 			case "MOVEMYMONEY" :
 				menuPrinter.askTransferQuantity();
+				state.push(request);
+				break;
+			case "WITHDRAW" :
+				menuPrinter.askWithdrawQuantity();
+				state.push(request);
+				break;
+			case "DEPOSIT" :
+				menuPrinter.askDepositQuantity();
 				state.push(request);
 				break;
 			case "NEWACCOUNT" :
@@ -130,6 +152,14 @@ public class NewBankClientHandler extends Thread {
 				}
 				if (state.peek().equals("TRANSFERTO")){
 					NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
+					break;
+				}
+				if (state.peek().equals("WITHDRAW")){
+					NewBank.executeWithdraw(customer, fromAccountIndex, requestAmount);
+					break;
+				}
+				if (state.peek().equals("DEPOSIT")){
+					NewBank.executeDeposit(customer, toAccountIndex, requestAmount);
 					break;
 				}
 				else {
