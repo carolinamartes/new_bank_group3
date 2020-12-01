@@ -5,9 +5,14 @@ import java.util.ArrayList;
 public class Customer {
 	
 	private ArrayList<Account> accounts;
+	private Integer ID;
+	private String CustomerPassword;
+
 	
-	public Customer() {
-		accounts = new ArrayList<>();
+	public Customer(Integer ID) { accounts = new ArrayList<>(); this.ID=ID;}
+
+	public Integer ID(){
+		return ID;
 	}
 	
 	public void printAccountBalance() {
