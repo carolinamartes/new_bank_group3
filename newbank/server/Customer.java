@@ -25,8 +25,7 @@ public class Customer {
 	}
 
 	public void printDepositToAccounts() {
-		ArrayList<Account> depositToAccounts = new ArrayList<Account>();
-		MenuPrinter.printDepositTo(depositToAccounts);
+		MenuPrinter.printDepositTo(accounts);
 	}
 
 	public void executeTransfer(int fromAccountID, int toAccountID, double requestAmount){
