@@ -63,6 +63,14 @@ public class MenuPrinter {
         out.println("How much would you like to deposit? Write DEPOSITAMOUNT {{amount}}");
     }
 
+    public static void askSendQuantity(){
+        out.println("How much would you like to send? Write SENDAMOUNT {{amount}}");
+    }
+
+    public static void askRecipient(){
+        out.println("Please indicate the recipient's account name. Note: The recipient must have a Checking account. Write RECIPIENT {{account name}}");
+    }
+
     public static void printTransferableFrom(ArrayList<Account> accounts){
         out.flush();
         if (accounts.size() == 0){
@@ -143,8 +151,7 @@ public class MenuPrinter {
     }
 
     public static void printFail(){
-        out.println("nope");
-
-        System.out.println("lol");
+        out.println("Oops, something went wrong!");
+        System.out.println("Error from client");
     }
 }

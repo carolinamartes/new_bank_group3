@@ -102,12 +102,14 @@ public class NewBankClientHandler extends Thread {
 
 	public synchronized void processRequest(CustomerID customer, String request) {
 		if (request.equals("1") || request.equals("2")){
-			System.out.println("HERE");
 			if (state.peek().equals("TRANSFERFROM")) {
 				fromAccountIndex = Integer.parseInt(request) - 1;
 			}
 			if (state.peek().equals("TRANSFERTO")) {
 				toAccountIndex = Integer.parseInt(request) - 1;
+			}
+			if (state.peek().equals("SEND")) {
+				fromAccountIndex = Integer.parseInt(request) - 1;
 			}
 		}
 		if (request.startsWith("TRANSFERAMOUNT")){
@@ -131,7 +133,30 @@ public class NewBankClientHandler extends Thread {
 			state.push("DEPOSIT");
 			return;
 		}
+		if (request.startsWith("SENDAMOUNT")){
+			String requestString = request;
+			requestAmount = Double.parseDouble(requestString.replace("SENDAMOUNT ", ""));
+			NewBank.showTransferFromOptions(customer, requestAmount);
+			state.push("SEND");
+			return;
+		}
+		if (request.startsWith("RECIPIENT")){
+			String requestString = request;
+			String recipient = requestString.replace("RECIPIENT ", "");
+			Integer toAccountID = NewBank.getAccountID(recipient);
+			if (toAccountID >= 0){
+				NewBank.executeSendMoney(customer, recipient, toAccountID, fromAccountIndex, requestAmount);
+			}
+			else {
+				MenuPrinter.printFail();
+			}
+			return;
+		}
 		switch (request) {
+			case "SENDMONEY" :
+				menuPrinter.askSendQuantity();
+				state.push(request);
+				break;
 			case "SHOWMYACCOUNTS" :
 				NewBank.showMyAccounts(customer);
 				state.push(request);
@@ -162,6 +187,10 @@ public class NewBankClientHandler extends Thread {
 				break;
 			case "1" :
 			case "2" :
+				if (state.peek().equals("SEND")){
+					menuPrinter.askRecipient();
+					break;
+				}
 				if (state.peek().equals("NEWACCOUNT")){
 					menuPrinter.printNewAccountsPg2();
 					break;

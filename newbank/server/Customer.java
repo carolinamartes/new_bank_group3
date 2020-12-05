@@ -14,6 +14,15 @@ public class Customer {
 	public Integer ID(){
 		return ID;
 	}
+
+	public Integer getCheckings() {
+		for(Account a : accounts) {
+			if (a.getAccountName() == "Checking"){
+				return accounts.indexOf(a);
+			}
+		}
+		return -1;
+	}
 	
 	public void printAccountBalance() {
 		MenuPrinter.printShowAccounts(accounts);
