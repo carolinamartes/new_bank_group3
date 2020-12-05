@@ -55,6 +55,14 @@ public class MenuPrinter {
         out.println("How much would you like to transfer? Write TRANSFERAMOUNT {{amount}}");
     }
 
+    public static void askWithdrawQuantity(){
+        out.println("How much would you like to withdraw? Write WITHDRAWAMOUNT {{amount}}");
+    }
+
+    public static void askDepositQuantity(){
+        out.println("How much would you like to deposit? Write DEPOSITAMOUNT {{amount}}");
+    }
+
     public static void printTransferableFrom(ArrayList<Account> accounts){
         out.flush();
         if (accounts.size() == 0){
@@ -62,6 +70,20 @@ public class MenuPrinter {
         }
 
         out.println("Select an account to transfer from:");
+        for(int i=0; i < accounts.size();i++){
+            int current = i + 1;
+            out.print("("+ current +") ");
+            out.println(accounts.get(i).getAccountName());
+        }
+    }
+
+    public static void printDepositTo(ArrayList<Account> accounts){
+        out.flush();
+        if (accounts.size() == 0){
+            out.println("No valid accounts found for this user");
+        }
+
+        out.println("Select an account to deposit to:");
         for(int i=0; i < accounts.size();i++){
             int current = i + 1;
             out.print("("+ current +") ");
