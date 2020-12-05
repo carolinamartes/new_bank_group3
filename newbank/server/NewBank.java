@@ -8,11 +8,17 @@ public class NewBank {
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
 	private HashMap<String,CustomerPassword> LoginCred;
+	private static HashMap<String,Employee> employees;
+	private HashMap<String, Integer> EID;
+	private HashMap<String,EmployeePassword> EmployeeLoginCred;
 	
 	private NewBank() {
 		ID = new HashMap<>();
 		customers = new HashMap<>();
 		LoginCred = new HashMap<>();
+		EID = new HashMap<>();
+		employees = new HashMap<>();
+		EmployeeLoginCred = new HashMap<>();
 		addTestData();
 	}
 
@@ -31,6 +37,10 @@ public class NewBank {
 		john.addAccount(new Account("Checking", 250.0));
 		customers.put("John", john);
 		LoginCred.put("John",new CustomerPassword("John123"));
+
+		Employee richard = new Employee(01);
+		employees.put("Richard", richard);
+		EmployeeLoginCred.put("Richard", new EmployeePassword("Richard123"));
 	}
 	
 	public static NewBank getBank() {
@@ -44,6 +54,21 @@ public class NewBank {
 				return new CustomerID(userName);
 		}
 		return null;
+	}
+
+	public synchronized EmployeeID checkEmployeeLogInDetails(String userName, String password) {
+		if(employees.containsKey(userName)) {
+			if(EmployeeLoginCred.get(userName).verifyPassword(password))
+				return new EmployeeID(userName);
+		}
+		return null;
+	}
+
+	public void createCustomer(String userName, String password, double openingBalance) {
+		//checks customer of same name does not exist
+		if(customers.containsKey(userName)) {
+			System.out.println("User already exists.");
+		}
 	}
 
 	public synchronized String validator(CustomerID customer) {
