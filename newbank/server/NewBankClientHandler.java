@@ -74,7 +74,7 @@ public class NewBankClientHandler extends Thread {
 				CustomerID customer = bank.checkLogInDetails(userName, password);
 
 				// if the user is authenticated then get requests from the user and process them
-				//if (customer != null) {
+				if (customer != null) {
 
 					out.println("Log In Successful. What do you want to do?");
 
@@ -87,7 +87,7 @@ public class NewBankClientHandler extends Thread {
 
 					}
 
-				//}
+				}
 			} else if(loginChoice == 2) {
 				EmployeeID employee = bank.checkEmployeeLogInDetails(userName, password);
 				if (employee != null) {
