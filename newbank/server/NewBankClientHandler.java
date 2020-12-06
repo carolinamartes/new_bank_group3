@@ -70,36 +70,38 @@ public class NewBankClientHandler extends Thread {
 			out.println("Checking Details...");
 
 			// authenticate user and get customer ID token from bank for use in subsequent requests
-			CustomerID customer = null;
-			EmployeeID employee = null;
-			if (loginChoice == 1){ customer = bank.checkLogInDetails(userName, password);}
-			if (loginChoice == 2){ employee = bank.checkEmployeeLogInDetails(userName, password);}
+			if (loginChoice == 1) {
+				CustomerID customer = bank.checkLogInDetails(userName, password);
 
-			// if the user is authenticated then get requests from the user and process them
-			if(customer != null) {
+				// if the user is authenticated then get requests from the user and process them
+				//if (customer != null) {
 
-				out.println("Log In Successful. What do you want to do?");
+					out.println("Log In Successful. What do you want to do?");
 
-				while(true) {
+					while (true) {
 
-					String request = in.readLine();
+						String request = in.readLine();
 
-					System.out.println("Request from " + customer.getKey());
-					processRequest(customer, request);
+						System.out.println("Request from " + customer.getKey());
+						processRequest(customer, request);
 
 					}
 
-			} else if(employee != null){
+				//}
+			} else if(loginChoice == 2) {
+				EmployeeID employee = bank.checkEmployeeLogInDetails(userName, password);
+				if (employee != null) {
 
-				out.println("Log In Successful. What do you want to do?");
+					out.println("Log In Successful. What do you want to do?");
 
-				while(true) {
+					while (true) {
 
-					String request = in.readLine();
+						String request = in.readLine();
 
-					System.out.println("Request from " + employee.getKey());
-					processEmployeeRequest(employee, request);
+						System.out.println("Request from " + employee.getKey());
+						processEmployeeRequest(employee, request);
 
+					}
 				}
 			}
 			else {
@@ -213,77 +215,30 @@ public class NewBankClientHandler extends Thread {
 	}
 	public synchronized void processEmployeeRequest(EmployeeID employee, String request) {
 
-		/*if (request.startsWith("TRANSFERAMOUNT")){
+		if (request.startsWith("NEWACCOUNT")){
 			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("TRANSFERAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("TRANSFERFROM");
+			Account account = new Account();
+			String customerName = requestString.replace("NEWACCOUNT", "");
+			NewBank.createAccount(customerName, account);
+			state.push("CREATEACCOUNT");
 			return;
 		}
-		if (request.startsWith("WITHDRAWAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("WITHDRAWAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("WITHDRAW");
-			return;
-		}
-		if (request.startsWith("DEPOSITAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("DEPOSITAMOUNT ", ""));
-			NewBank.showDepositOptions(customer);
-			state.push("DEPOSIT");
-			return;
-		}*/
+
 		switch (request) {
-			case "SHOWMYACCOUNTS" :
-				//NewBank.showMyAccounts(customer);
+			case "CREATEACCOUNT" :
+				menuPrinter.askUserName();
 				state.push(request);
 				break;
-			case "MOVEMYMONEY" :
+			case "CREATEUSER" :
 				menuPrinter.askTransferQuantity();
 				state.push(request);
 				break;
-			case "WITHDRAW" :
-				menuPrinter.askWithdrawQuantity();
-				state.push(request);
-				break;
-			case "DEPOSIT" :
-				menuPrinter.askDepositQuantity();
-				state.push(request);
-				break;
-			case "NEWACCOUNT" :
-				menuPrinter.printNewAccountsPg1();
-				state.push(request);
-				break;
-			case "LOGOUT" :
-				menuPrinter.printLogOut();
-				state.push(request);
-				break;
-			case "BACK" :
-				request = state.pop();
-				//processRequest(customer, request);
-				break;
-			case "1" :
-			case "2" :
-				if (state.peek().equals("NEWACCOUNT")){
-					menuPrinter.printNewAccountsPg2();
+				if (state.peek().equals("CREATEACCOUNT")){
+					NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
 					break;
 				}
-				if (state.peek().equals("TRANSFERFROM")){
-					//NewBank.showTransferToOptions(customer, fromAccountIndex);
-					state.push("TRANSFERTO");
-					break;
-				}
-				if (state.peek().equals("TRANSFERTO")){
-					//NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
-					break;
-				}
-				if (state.peek().equals("WITHDRAW")){
-					//NewBank.executeWithdraw(customer, fromAccountIndex, requestAmount);
-					break;
-				}
-				if (state.peek().equals("DEPOSIT")){
-					//NewBank.executeDeposit(customer, toAccountIndex, requestAmount);
+				if (state.peek().equals("CREATEUSER")){
+					NewBank.executeWithdraw(customer, fromAccountIndex, requestAmount);
 					break;
 				}
 				else {

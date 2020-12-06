@@ -69,6 +69,13 @@ public class NewBank {
 		if(customers.containsKey(userName)) {
 			System.out.println("User already exists.");
 		}
+		else{
+			Customer userName = new Customer();
+		}
+	}
+
+	public static void createAccount(String customerName, Account account){
+		customers.get(customerName).addAccount(account);
 	}
 
 	public synchronized String validator(CustomerID customer) {
