@@ -263,11 +263,11 @@ public class NewBankClientHandler extends Thread {
 
 		switch (request) {
 			case "CREATEACCOUNT" :
-				menuPrinter.askUserName();
+				menuPrinter.askCustomerName();
 				state.push(request);
 				break;
 			case "CREATECUSTOMER" :
-				menuPrinter.askTransferQuantity();
+				menuPrinter.askNewName();
 				state.push(request);
 				break;
 			case "LOGOUT" :

@@ -1,8 +1,9 @@
 package newbank.server;
 
-
 public class EmployeePassword {
+
     private final String password;
+
     public EmployeePassword(String password) {
         this.password = password;
     }
