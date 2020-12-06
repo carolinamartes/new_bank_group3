@@ -2,13 +2,14 @@ package newbank.server;
 
 import java.util.HashMap;
 
+
 public class NewBank {
-	
+
 	private static final NewBank bank = new NewBank();
-	private static HashMap<String,Customer> customers;
+	private static HashMap<String, Customer> customers;
 	private HashMap<String, Integer> ID;
-	private HashMap<String,CustomerPassword> LoginCred;
-	
+	private HashMap<String, CustomerPassword> LoginCred;
+
 	private NewBank() {
 		ID = new HashMap<>();
 		customers = new HashMap<>();
@@ -20,41 +21,59 @@ public class NewBank {
 		Customer bhagy = new Customer(01);
 		bhagy.addAccount(new Account("Main", 1000.0));
 		customers.put("Bhagy", bhagy);
-		LoginCred.put("Bhagy",new CustomerPassword("Bhagy123"));
+		LoginCred.put("Bhagy", new CustomerPassword("Bhagy1234"));
 
 		Customer christina = new Customer(02);
 		christina.addAccount(new Account("Savings", 1500.0));
 		customers.put("Christina", christina);
-		LoginCred.put("Christina",new CustomerPassword("Christina123"));
+		LoginCred.put("Christina", new CustomerPassword("Christina1234"));
 
 		Customer john = new Customer(03);
 		john.addAccount(new Account("Checking", 250.0));
+		john.addAccount(new Account("Saving", 500));
+		john.addAccount(new Account("Main", 2000));
 		customers.put("John", john);
-		LoginCred.put("John",new CustomerPassword("John123"));
+		LoginCred.put("John", new CustomerPassword("John1234"));
 	}
-	
+
 	public static NewBank getBank() {
 		return bank;
 	}
 
 	//Method which handles authentication
 	public synchronized CustomerID checkLogInDetails(String userName, String password) {
-		if(customers.containsKey(userName)) {
-			if(LoginCred.get(userName).verifyPassword(password))
+		if (customers.containsKey(userName)) {
+			if (LoginCred.get(userName).verifyPassword(password))
 				return new CustomerID(userName);
 		}
 		return null;
 	}
 
+	public synchronized CustomerID ChangePassword(String userName,String temp, String Currentpassword) {
+		if (customers.containsKey(userName)) {
+			if (LoginCred.get(userName).verifyPassword(Currentpassword)) {
+				LoginCred.get(userName).changePassword(temp);
+			}
+		}
+		return null;
+	}
+
+
+
 	public synchronized String validator(CustomerID customer) {
-		if(customers.containsKey(customer.getKey())) {
+		if (customers.containsKey(customer.getKey())) {
 			return "valid";
 		}
 		return "invalid";
 	}
 
+
 	public static void showMyAccounts(CustomerID customer) {
 		customers.get(customer.getKey()).printAccountBalance();
+	}
+
+	public static void printaccountstotext(CustomerID customer) {
+		customers.get(customer.getKey()).printaccountstotext();
 	}
 
 	public static void showTransferFromOptions(CustomerID customer, double requestAmount) {
