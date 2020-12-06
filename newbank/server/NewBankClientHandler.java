@@ -72,7 +72,7 @@ public class NewBankClientHandler extends Thread {
 			if(customer != null) {
 
 				out.println("Log In Successful. What do you want to do?");
-
+				MenuPrinter.printOptions();
 				while(true) {
 
 					String request = in.readLine();

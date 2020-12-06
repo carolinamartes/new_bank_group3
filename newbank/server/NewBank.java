@@ -3,7 +3,16 @@ package newbank.server;
 import java.util.HashMap;
 
 public class NewBank {
-	
+
+	public static final String [] commands = new String[]{
+			"SENDMONEY",
+			"SHOWMYACCOUNTS",
+			"MOVEMYMONEY",
+			"WITHDRAW",
+			"DEPOSIT",
+			"NEWACCOUNT",
+			"LOGOUT"
+	};
 	private static final NewBank bank = new NewBank();
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
