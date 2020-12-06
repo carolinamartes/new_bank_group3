@@ -25,6 +25,11 @@ public class ExampleClient extends Thread{
 				try {
 					while(true) {
 						String response = bankServerIn.readLine();
+						//This statement prevents a series of nulls when entering an incorrect password three times
+						if(response == null){
+							Thread.currentThread().interrupt();
+							System.exit(0);
+						}
 						System.out.println(response);
 					}
 				} catch (IOException e) {
