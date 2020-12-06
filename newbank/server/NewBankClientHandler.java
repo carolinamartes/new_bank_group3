@@ -217,10 +217,18 @@ public class NewBankClientHandler extends Thread {
 
 		if (request.startsWith("NEWACCOUNT")){
 			String requestString = request;
-			Account account = new Account();
-			String customerName = requestString.replace("NEWACCOUNT", "");
-			NewBank.createAccount(customerName, account);
+			String accountName = requestString.replace("NEWACCOUNT", "");
+			Account account = new Account(accountName, 0);
+			NewBank.createAccount(accountName, account);
 			state.push("CREATEACCOUNT");
+			return;
+		}
+
+		if (request.startsWith("NEWCUSTOMER")){
+			String requestString = request;
+			String customerName = requestString.replace("NEWCUSTOMER", "");
+			NewBank.createCustomer(customerName);
+			state.push("CREATECUSTOMER");
 			return;
 		}
 
@@ -229,22 +237,18 @@ public class NewBankClientHandler extends Thread {
 				menuPrinter.askUserName();
 				state.push(request);
 				break;
-			case "CREATEUSER" :
+			case "CREATECUSTOMER" :
 				menuPrinter.askTransferQuantity();
 				state.push(request);
 				break;
-				if (state.peek().equals("CREATEACCOUNT")){
-					NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
-					break;
-				}
-				if (state.peek().equals("CREATEUSER")){
-					NewBank.executeWithdraw(customer, fromAccountIndex, requestAmount);
-					break;
-				}
-				else {
-					out.println("Invalid Request");
-					break;
-				}
+			case "LOGOUT" :
+				menuPrinter.printLogOut();
+				state.push(request);
+				break;
+			case "BACK" :
+				request = state.pop();
+				processEmployeeRequest(employee, request);
+				break;
 			default :
 				menuPrinter.printFail();
 				break;

@@ -7,7 +7,7 @@ public class NewBank {
 	private static final NewBank bank = new NewBank();
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
-	private HashMap<String,CustomerPassword> LoginCred;
+	private static HashMap<String,CustomerPassword> LoginCred;
 	private static HashMap<String,Employee> employees;
 	private HashMap<String, Integer> EID;
 	private HashMap<String,EmployeePassword> EmployeeLoginCred;
@@ -64,13 +64,16 @@ public class NewBank {
 		return null;
 	}
 
-	public void createCustomer(String userName, String password, double openingBalance) {
+	public static void createCustomer(String userName) {
 		//checks customer of same name does not exist
 		if(customers.containsKey(userName)) {
 			System.out.println("User already exists.");
 		}
 		else{
-			Customer userName = new Customer();
+			Customer newCustomer = new Customer(customers.size()+1);
+			customers.put(userName, newCustomer);
+			String password = userName + "123";
+			LoginCred.put(userName,new CustomerPassword(password));
 		}
 	}
 
