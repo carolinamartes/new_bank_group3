@@ -1,62 +1,41 @@
-package newbank.client;
+package newbank.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-public class ExampleClient extends Thread{
+public class NewBankServer extends Thread{
 	
-	private Socket server;
-	private PrintWriter bankServerOut;	
-	private BufferedReader userInput;
-	private Thread bankServerResponseThread;
+	private ServerSocket server;
 	
-	public ExampleClient(String ip, int port) throws UnknownHostException, IOException {
-		server = new Socket(ip,port);
-		userInput = new BufferedReader(new InputStreamReader(System.in)); 
-		bankServerOut = new PrintWriter(server.getOutputStream(), true); 
-		
-		bankServerResponseThread = new Thread() {
-			private BufferedReader bankServerIn = new BufferedReader(new InputStreamReader(server.getInputStream())); 
-			public void run() {
-				try {
-					while(true) {
-						String response = bankServerIn.readLine();
-						System.out.println(response);
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-					return;
-				}
-			}
-		};
-		bankServerResponseThread.start();
+	public NewBankServer(int port) throws IOException {
+		server = new ServerSocket(port);
 	}
 	
-	
 	public void run() {
-		while(true) {
+		// starts up a new client handler thread to receive incoming connections and process requests
+		System.out.println("New Bank Server listening on " + server.getLocalPort());
+		try {
+			while(true) {
+				Socket s = server.accept();
+				NewBankClientHandler clientHandler = new NewBankClientHandler(s);
+				clientHandler.start();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
 			try {
-				while(true) {
-					String command = userInput.readLine();
-					bankServerOut.println(command);
-					if(command.equals("LOGOUT")){
-					bankServerOut.close();
-					server.close();
-					System.exit(0);
-					}
-				}				
+				server.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
 	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		new ExampleClient("localhost",14002).start();
+	public static void main(String[] args) throws IOException {
+		// starts a new NewBankServer thread on a specified port number
+		new NewBankServer(14002).start();
 	}
 }
