@@ -2,9 +2,14 @@ package newbank.server;
 
 
 public class CustomerPassword {
-    private final String password;
+    private String password;
     public CustomerPassword(String password) {
         this.password = password;
+    }
+
+    //Added functionality for changing password;
+    public void changePassword(String password){
+     this.password = password;
     }
 
     public boolean verifyPassword(String password){
