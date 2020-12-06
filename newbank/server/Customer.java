@@ -3,21 +3,30 @@ package newbank.server;
 import java.util.ArrayList;
 
 public class Customer {
-	
+
+
 	private ArrayList<Account> accounts;
 	private Integer ID;
 	private String CustomerPassword;
+	private String userName;
 
-	
+
 	public Customer(Integer ID) { accounts = new ArrayList<>(); this.ID=ID;}
 
-	public Integer ID(){
+	public Integer getID() {
+		return ID;
+	}
+
+	Integer ID(){
 		return ID;
 	}
 	
 	public void printAccountBalance() {
 		MenuPrinter.printShowAccounts(accounts);
 	}
+	//This method is part of the functionality to print a balance to text
+	public void printaccountstotext() {
+		MenuPrinter.printaccountstotext(accounts);}
 
 	public void printTransferableFromAccounts(double requestAmount) {
 		ArrayList<Account> transferableFromAccounts = new ArrayList<Account>();
