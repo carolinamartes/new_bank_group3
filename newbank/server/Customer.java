@@ -27,6 +27,9 @@ public class Customer {
 	public void printAccountBalance() {
 		MenuPrinter.printShowAccounts(accounts);
 	}
+	//This method is part of the functionality to print a balance to text
+	public void printaccountstotext() {
+		MenuPrinter.printaccountstotext(accounts);}
 
 	public void printTransferableFromAccounts(double requestAmount) {
 		ArrayList<Account> transferableFromAccounts = new ArrayList<Account>();
