@@ -116,4 +116,16 @@ public class NewBank {
 		customers.get(customer.getKey()).executeDeposit(toAccount, requestAmount);
 	}
 
+	public static Integer getAccountID(String recipient){
+		if (customers.containsKey(recipient)){
+			return customers.get(recipient).getCheckings();
+		}
+		return -1;
+	}
+
+	public static void executeSendMoney(CustomerID customer, String recipient, Integer toAccountID, Integer fromAccountIndex, double requestAmount){
+		customers.get(customer.getKey()).executeWithdraw(fromAccountIndex, requestAmount);
+		customers.get(recipient).executeDeposit(toAccountID, requestAmount);
+	}
+
 }
