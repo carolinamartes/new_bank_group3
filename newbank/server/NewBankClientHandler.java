@@ -113,31 +113,35 @@ public class NewBankClientHandler extends Thread {
 			}
 		}
 		if (request.startsWith("TRANSFERAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("TRANSFERAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("TRANSFERFROM");
+			boolean validAmount = checkIfValidAmountFormat(request, "TRANSFERAMOUNT ");
+			if (validAmount) {
+				NewBank.showTransferFromOptions(customer, requestAmount);
+				state.push("TRANSFERFROM");
+			}
 			return;
 		}
 		if (request.startsWith("WITHDRAWAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("WITHDRAWAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("WITHDRAW");
+			boolean validAmount = checkIfValidAmountFormat(request, "WITHDRAWAMOUNT ");
+			if (validAmount){
+				NewBank.showTransferFromOptions(customer, requestAmount);
+				state.push("WITHDRAW");
+			}
 			return;
 		}
 		if (request.startsWith("DEPOSITAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("DEPOSITAMOUNT ", ""));
-			NewBank.showDepositOptions(customer);
-			state.push("DEPOSIT");
+			boolean validAmount = checkIfValidAmountFormat(request, "DEPOSITAMOUNT ");
+			if (validAmount){
+				NewBank.showDepositOptions(customer);
+				state.push("DEPOSIT");
+			}
 			return;
 		}
 		if (request.startsWith("SENDAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("SENDAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("SEND");
+			boolean validAmount = checkIfValidAmountFormat(request, "SENDAMOUNT ");
+			if (validAmount){
+				NewBank.showTransferFromOptions(customer, requestAmount);
+				state.push("SEND");
+			}
 			return;
 		}
 		if (request.startsWith("RECIPIENT")){
@@ -219,6 +223,16 @@ public class NewBankClientHandler extends Thread {
 			default :
 				menuPrinter.printFail();
 				break;
+		}
+	}
+	public boolean checkIfValidAmountFormat(String requestString, String parseString){
+		try {
+			requestAmount = Double.parseDouble(requestString.replace(parseString, ""));
+			return true;
+		}
+		catch(NumberFormatException e){
+			MenuPrinter.printFail();
+			return false;
 		}
 	}
 }
