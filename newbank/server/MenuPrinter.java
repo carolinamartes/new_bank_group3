@@ -27,6 +27,13 @@ public class MenuPrinter {
         out.println();
     }
 
+    public static void printOptions(){
+        for (String command : NewBank.commands) {
+            out.print(" •  ");
+            out.println(command);
+        }
+    }
+
     public static void printShowAccounts(ArrayList<Account> accounts){
         out.flush();
         String s = "";
