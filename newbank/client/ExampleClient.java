@@ -14,7 +14,7 @@ public class ExampleClient extends Thread{
 	private BufferedReader userInput;
 	private Thread bankServerResponseThread;
 	
-	//test boris
+	//test boris new
 	
 	public ExampleClient(String ip, int port) throws UnknownHostException, IOException {
 		server = new Socket(ip,port);
