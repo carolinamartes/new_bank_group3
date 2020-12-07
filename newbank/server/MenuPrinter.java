@@ -117,10 +117,10 @@ public class MenuPrinter {
         System.out.println("printNewAccountsPg1");
     }
 
-    public static void printNewAccountsPg2(){
+    public static void printNewAccountsPg2(String text){
         out.flush();
         //print new account options page 2
-        out.println("Create new" + "(placeholder account)");
+        out.println("Create new " + text + " Account");
         out.println();
 
         System.out.println("printNewAccountsPg2");

@@ -190,13 +190,27 @@ public class NewBankClientHandler extends Thread {
 				processRequest(customer, request);
 				break;
 			case "1" :
+
+				if (state.peek().equals("NEWACCOUNT")){
+					NewBank.addNewAccount(customer, "Current");
+					menuPrinter.printNewAccountsPg2("Current");
+					menuPrinter.printSuccess();
+					NewBank.showMyAccounts(customer);
+					break;
+				} else {
+					out.println("Invalid Request");
+					break;
+				}
 			case "2" :
 				if (state.peek().equals("SEND")){
 					menuPrinter.askRecipient();
 					break;
 				}
 				if (state.peek().equals("NEWACCOUNT")){
-					menuPrinter.printNewAccountsPg2();
+					NewBank.addNewAccount(customer, "Savings");
+					menuPrinter.printNewAccountsPg2("Savings");
+					menuPrinter.printSuccess();
+					NewBank.showMyAccounts(customer);
 					break;
 				}
 				if (state.peek().equals("TRANSFERFROM")){

@@ -101,5 +101,8 @@ public class NewBank {
 		customers.get(customer.getKey()).executeWithdraw(fromAccountIndex, requestAmount);
 		customers.get(recipient).executeDeposit(toAccountID, requestAmount);
 	}
+	public static void addNewAccount(CustomerID customer, String accountTyp) {
+		customers.get(customer.getKey()).addAccount(new Account(accountTyp, 350.0));
+	}
 
 }
