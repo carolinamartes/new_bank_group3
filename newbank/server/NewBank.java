@@ -81,6 +81,10 @@ public class NewBank {
 		customers.get(customerName).addAccount(account);
 	}
 
+	public static void removeAccount(String customerName, Account account){
+		customers.get(customerName).removeAccount(account);
+	}
+
 	public synchronized String validator(CustomerID customer) {
 		if(customers.containsKey(customer.getKey())) {
 			return "valid";

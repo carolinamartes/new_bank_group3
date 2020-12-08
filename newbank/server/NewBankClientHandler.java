@@ -57,11 +57,7 @@ public class NewBankClientHandler extends Thread {
 
 		// keep getting requests from the client and processing them
 		try {
-			//ask which user
-			out.println("Enter 1 for customer login, 2 for employee login.");
-			int loginChoice = in.read();
-			//eats next line
-			in.readLine();
+
 			// ask for user name and password
 			out.println("Enter Username");
 			String userName = in.readLine();
@@ -70,39 +66,21 @@ public class NewBankClientHandler extends Thread {
 			out.println("Checking Details...");
 
 			// authenticate user and get customer ID token from bank for use in subsequent requests
-			if (loginChoice == 1) {
-				CustomerID customer = bank.checkLogInDetails(userName, password);
+			CustomerID customer = bank.checkLogInDetails(userName, password);
 
-				// if the user is authenticated then get requests from the user and process them
-				if (customer != null) {
+			// if the user is authenticated then get requests from the user and process them
+			if(customer != null) {
 
-					out.println("Log In Successful. What do you want to do?");
+				out.println("Log In Successful. What do you want to do?");
+				while(true) {
 
-					while (true) {
+					String request = in.readLine();
 
-						String request = in.readLine();
-
-						System.out.println("Request from " + customer.getKey());
-						processRequest(customer, request);
-
-					}
+					System.out.println("Request from " + customer.getKey());
+					processRequest(customer, request);
 
 				}
-			} else if(loginChoice == 2) {
-				EmployeeID employee = bank.checkEmployeeLogInDetails(userName, password);
-				if (employee != null) {
 
-					out.println("Log In Successful. What do you want to do?");
-
-					while (true) {
-
-						String request = in.readLine();
-
-						System.out.println("Request from " + employee.getKey());
-						processEmployeeRequest(employee, request);
-
-					}
-				}
 			}
 			else {
 				out.println("Log In Failed");
