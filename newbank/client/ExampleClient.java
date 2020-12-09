@@ -17,14 +17,19 @@ public class ExampleClient extends Thread{
 	public ExampleClient(String ip, int port) throws UnknownHostException, IOException {
 		server = new Socket(ip,port);
 		userInput = new BufferedReader(new InputStreamReader(System.in)); 
-		bankServerOut = new PrintWriter(server.getOutputStream(), true); 
-		
+		bankServerOut = new PrintWriter(server.getOutputStream(), true);
+
 		bankServerResponseThread = new Thread() {
-			private BufferedReader bankServerIn = new BufferedReader(new InputStreamReader(server.getInputStream())); 
+			private BufferedReader bankServerIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
 			public void run() {
 				try {
 					while(true) {
 						String response = bankServerIn.readLine();
+						//This statement prevents a series of nulls when entering an incorrect password three times
+						if(response == null){
+							Thread.currentThread().interrupt();
+							System.exit(0);
+						}
 						System.out.println(response);
 					}
 				} catch (IOException e) {
@@ -35,8 +40,7 @@ public class ExampleClient extends Thread{
 		};
 		bankServerResponseThread.start();
 	}
-	
-	
+
 	public void run() {
 		while(true) {
 			try {
