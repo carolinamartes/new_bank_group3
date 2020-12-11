@@ -28,6 +28,9 @@ public class Customer {
 		MenuPrinter.printShowAccounts(accounts);
 	}
 
+	public void printaccountstotext() {
+		MenuPrinter.printaccountstotext(accounts);}
+
 	public void printTransferableFromAccounts(double requestAmount) {
 		ArrayList<Account> transferableFromAccounts = new ArrayList<Account>();
 		for(Account a : accounts) {

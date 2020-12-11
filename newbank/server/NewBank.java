@@ -29,17 +29,19 @@ public class NewBank {
 		Customer bhagy = new Customer(01);
 		bhagy.addAccount(new Account("Main", 1000.0));
 		customers.put("Bhagy", bhagy);
-		LoginCred.put("Bhagy",new CustomerPassword("Bhagy123"));
+		LoginCred.put("Bhagy",new CustomerPassword("Bhagy1234"));
 
 		Customer christina = new Customer(02);
 		christina.addAccount(new Account("Savings", 1500.0));
 		customers.put("Christina", christina);
-		LoginCred.put("Christina",new CustomerPassword("Christina123"));
+		LoginCred.put("Christina",new CustomerPassword("Christina1234"));
 
 		Customer john = new Customer(03);
 		john.addAccount(new Account("Checking", 250.0));
+		john.addAccount(new Account("Saving", 500));
+		john.addAccount(new Account("Main", 2000));
 		customers.put("John", john);
-		LoginCred.put("John",new CustomerPassword("John123"));
+		LoginCred.put("John",new CustomerPassword("John1234"));
 	}
 	
 	public static NewBank getBank() {
@@ -54,7 +56,14 @@ public class NewBank {
 		}
 		return null;
 	}
-
+	public synchronized CustomerID ChangePassword(String userName,String temp, String currentPassword) {
+		if (customers.containsKey(userName)) {
+			if (LoginCred.get(userName).verifyPassword(currentPassword)) {
+				LoginCred.get(userName).changePassword(temp);
+			}
+		}
+		return null;
+	}
 	public synchronized String validator(CustomerID customer) {
 		if(customers.containsKey(customer.getKey())) {
 			return "valid";
@@ -66,6 +75,9 @@ public class NewBank {
 		customers.get(customer.getKey()).printAccountBalance();
 	}
 
+	public static void printsAccountsToText(CustomerID customer) {
+		customers.get(customer.getKey()).printaccountstotext();
+	}
 	public static void showTransferFromOptions(CustomerID customer, double requestAmount) {
 		customers.get(customer.getKey()).printTransferableFromAccounts(requestAmount);
 	}
@@ -103,3 +115,4 @@ public class NewBank {
 	}
 
 }
+ 
