@@ -44,11 +44,10 @@ public class NewBankClientHandler extends Thread {
 				return customer;
 			out.println("Invalid Username or Password");
 			attempt++;
-		}
-		System.out.println("You have entered an incorrect User or password three times, please try again later.");
-		System.exit(-1);
-		return null;
 
+		}
+		out.println("Maximum Number of login attempts for this session reached");
+		return null;
 	}
 
 	public void run() {
@@ -58,20 +57,12 @@ public class NewBankClientHandler extends Thread {
 		// keep getting requests from the client and processing them
 		try {
 
-			// ask for user name and password
-			out.println("Enter Username");
-			String userName = in.readLine();
-			out.println("Enter Password");
-			String password = in.readLine();
-			out.println("Checking Details...");
-
-			// authenticate user and get customer ID token from bank for use in subsequent requests
-			CustomerID customer = bank.checkLogInDetails(userName, password);
-
-			// if the user is authenticated then get requests from the user and process them
-			if(customer != null) {
-
+			out.println("Welcome to NewBank");
+			CustomerID customer = null;
+			customer = login();
+			if (customer != null) {
 				out.println("Log In Successful. What do you want to do?");
+
 				while(true) {
 
 					String request = in.readLine();
@@ -81,14 +72,13 @@ public class NewBankClientHandler extends Thread {
 
 				}
 
-			}
-			else {
+			} else {
 				out.println("Log In Failed");
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				in.close();
 				out.close();
@@ -99,7 +89,7 @@ public class NewBankClientHandler extends Thread {
 		}
 	}
 
-	public synchronized void processRequest(CustomerID customer, String request) {
+	public synchronized void processRequest(CustomerID customer, String request) throws IOException {
 		if (request.equals("1") || request.equals("2")){
 			if (state.peek().equals("TRANSFERFROM")) {
 				fromAccountIndex = Integer.parseInt(request) - 1;
@@ -112,31 +102,35 @@ public class NewBankClientHandler extends Thread {
 			}
 		}
 		if (request.startsWith("TRANSFERAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("TRANSFERAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("TRANSFERFROM");
+			boolean validAmount = checkIfValidAmountFormat(request, "TRANSFERAMOUNT ");
+			if (validAmount) {
+				NewBank.showTransferFromOptions(customer, requestAmount);
+				state.push("TRANSFERFROM");
+			}
 			return;
 		}
 		if (request.startsWith("WITHDRAWAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("WITHDRAWAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("WITHDRAW");
+			boolean validAmount = checkIfValidAmountFormat(request, "WITHDRAWAMOUNT ");
+			if (validAmount){
+				NewBank.showTransferFromOptions(customer, requestAmount);
+				state.push("WITHDRAW");
+			}
 			return;
 		}
 		if (request.startsWith("DEPOSITAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("DEPOSITAMOUNT ", ""));
-			NewBank.showDepositOptions(customer);
-			state.push("DEPOSIT");
+			boolean validAmount = checkIfValidAmountFormat(request, "DEPOSITAMOUNT ");
+			if (validAmount){
+				NewBank.showDepositOptions(customer);
+				state.push("DEPOSIT");
+			}
 			return;
 		}
 		if (request.startsWith("SENDAMOUNT")){
-			String requestString = request;
-			requestAmount = Double.parseDouble(requestString.replace("SENDAMOUNT ", ""));
-			NewBank.showTransferFromOptions(customer, requestAmount);
-			state.push("SEND");
+			boolean validAmount = checkIfValidAmountFormat(request, "SENDAMOUNT ");
+			if (validAmount){
+				NewBank.showTransferFromOptions(customer, requestAmount);
+				state.push("SEND");
+			}
 			return;
 		}
 		if (request.startsWith("RECIPIENT")){
@@ -160,6 +154,10 @@ public class NewBankClientHandler extends Thread {
 				NewBank.showMyAccounts(customer);
 				state.push(request);
 				break;
+			case "PRINTACCOUNTS":
+				NewBank.printsAccountsToText(customer);
+				state.push(request);
+				break;
 			case "MOVEMYMONEY" :
 				menuPrinter.askTransferQuantity();
 				state.push(request);
@@ -167,6 +165,37 @@ public class NewBankClientHandler extends Thread {
 			case "WITHDRAW" :
 				menuPrinter.askWithdrawQuantity();
 				state.push(request);
+				break;
+			case "CHANGEPASSWORD":
+				out.println("Enter your userName");
+				String userName = in.readLine();
+				out.println("Enter your current password");
+				String currentPassword = in.readLine();
+				CustomerID PasswordChange = bank.checkLogInDetails(userName, currentPassword);
+				if (customer == null) {
+					out.println("user not recognized");
+				} else {
+					out.println("Enter your new password, this must be a minimum of 8 characters");
+					String temp = in.readLine();
+					if (temp.length() <= 7 || currentPassword.equals(temp)) {
+						out.println("Something went wrong");
+						return;
+					} else {
+						out.println("Please re-enter your new password");
+						String temp2 = in.readLine();
+						if (temp.equals(temp2)) {
+							CustomerID ID = bank.ChangePassword(userName, temp, currentPassword);
+							out.println("Password Successfully Changed");
+							return;
+
+						} else {
+							out.println("Passwords do not match");
+							return;
+						}
+					}
+				}
+
+
 				break;
 			case "DEPOSIT" :
 				menuPrinter.askDepositQuantity();
@@ -220,6 +249,7 @@ public class NewBankClientHandler extends Thread {
 				break;
 		}
 	}
+
 	public synchronized void processEmployeeRequest(EmployeeID employee, String request) {
 
 		if (request.startsWith("NEWACCOUNT")){
@@ -259,6 +289,16 @@ public class NewBankClientHandler extends Thread {
 			default :
 				menuPrinter.printFail();
 				break;
+
+	public boolean checkIfValidAmountFormat(String requestString, String parseString){
+		try {
+			requestAmount = Double.parseDouble(requestString.replace(parseString, ""));
+			return true;
+		}
+		catch(NumberFormatException e){
+			MenuPrinter.printFail();
+			return false;
+
 		}
 	}
 }

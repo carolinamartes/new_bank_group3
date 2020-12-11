@@ -1,9 +1,19 @@
 package newbank.server;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MenuPrinter {
 
@@ -27,6 +37,13 @@ public class MenuPrinter {
         out.println();
     }
 
+    public static void printOptions(){
+        for (String command : NewBank.commands) {
+            out.print(" •  ");
+            out.println(command);
+        }
+    }
+
     public static void printShowAccounts(ArrayList<Account> accounts){
         out.flush();
         String s = "";
@@ -38,7 +55,31 @@ public class MenuPrinter {
         }
         out.println(s);
     }
+    public static void printaccountstotext(ArrayList<Account> accounts){
+        out.flush();
+        String s = "";
+        if (accounts.size() == 0) {
+            out.println("No accounts found for this user");
+        }
+        for(Account a : accounts) {
+            LocalDate time = LocalDate.now();
+            Date date = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String t = dateFormat.format(date);
+            s += a.toString() + "  ";
+            String p = new JFileChooser().getFileSystemView().getDefaultDirectory().toString();
+            Path path = Paths.get(p + "\\"+ t+ "AccountBalance.txt");
+            String contents = t + System.lineSeparator() + s;
 
+            try {
+                Files.writeString(path, contents, StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                out.println("Something went wrong.");
+            }
+        }
+        out.println("Statement printed to your local device");
+
+    }
     public static void printTransferableTo(ArrayList<Account> accounts, int fromAccountID) {
         Account fromAccount = accounts.get(fromAccountID);
         out.println("Select an account to transfer to:");
