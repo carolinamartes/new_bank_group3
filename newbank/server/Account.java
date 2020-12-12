@@ -7,7 +7,6 @@ public class Account {
 	private double openingBalance;
 	private double currentBalance;
 
-
 	public Account(String accountName, double openingBalance) {
 		this.accountName = accountName;
 		this.accountType = accountType;
