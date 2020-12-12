@@ -16,12 +16,18 @@ public class NewBank {
 	private static final NewBank bank = new NewBank();
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
-	private HashMap<String,CustomerPassword> LoginCred;
+	private static HashMap<String,CustomerPassword> LoginCred;
+	private static HashMap<String,Employee> employees;
+	private HashMap<String, Integer> EID;
+	private HashMap<String,EmployeePassword> EmployeeLoginCred;
 	
 	private NewBank() {
 		ID = new HashMap<>();
 		customers = new HashMap<>();
 		LoginCred = new HashMap<>();
+		EID = new HashMap<>();
+		employees = new HashMap<>();
+		EmployeeLoginCred = new HashMap<>();
 		addTestData();
 	}
 
@@ -46,6 +52,10 @@ public class NewBank {
 		john.addAccount(new Account(mainAccountType, 2000));
 		customers.put("John", john);
 		LoginCred.put("John",new CustomerPassword("John1234"));
+
+		Employee richard = new Employee(01);
+		employees.put("Richard", richard);
+		EmployeeLoginCred.put("Richard", new EmployeePassword("Richard1234"));
 	}
 	
 	public static NewBank getBank() {
@@ -66,6 +76,14 @@ public class NewBank {
 			if (LoginCred.get(userName).verifyPassword(currentPassword)) {
 				LoginCred.get(userName).changePassword(temp);
 			}
+		}
+		return null;
+	}
+
+	public synchronized EmployeeID checkEmployeeLogInDetails(String userName, String password) {
+		if(employees.containsKey(userName)) {
+			if(EmployeeLoginCred.get(userName).verifyPassword(password))
+				return new EmployeeID(userName);
 		}
 		return null;
 	}
@@ -120,5 +138,22 @@ public class NewBank {
 		customers.get(recipient).executeDeposit(toAccountID, requestAmount);
 	}
 
+	public static void createCustomer(String userName) {
+		//checks customer of same name does not exist
+		if(customers.containsKey(userName)) {
+			System.out.println("User already exists.");
+		}
+		else{
+			Customer newCustomer = new Customer(customers.size()+1);
+			customers.put(userName, newCustomer);
+			String password = userName + "123";
+			LoginCred.put(userName,new CustomerPassword(password));
+		}
+	}
+
+	public static void createAccount(String customerName){
+		AccountType mainAccountType = new AccountType("Main");
+		customers.get(customerName).addAccount(new Account(mainAccountType, 0));
+	}
 }
  
