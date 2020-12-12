@@ -3,47 +3,79 @@ package newbank.server;
 import java.util.ArrayList;
 
 public class Customer {
+	private ArrayList<Account> accounts;
+	private Integer ID;
+	private String CustomerPassword;
 	
-	private final ArrayList<Account> accounts;
-	private final Integer ID;
-	//private String CustomerPassword;
-
-	
-	public Customer(Integer ID) { accounts = new ArrayList<>(); this.ID=ID;}
+	public Customer(Integer ID) {
+		accounts = new ArrayList<Account>();
+		this.ID = ID;
+	}
 
 	public Integer ID(){
 		return ID;
 	}
+
+	public int getCheckings() {
+		for(Account a : accounts) {
+			if (a.getAccountType().getKey().equals("Checking")){
+				return accounts.indexOf(a);
+			}
+		}
+		return -1;
+	}
 	
-	public void printAccountBalance(MenuPrinter menuPrinter) {
-		menuPrinter.printShowAccounts(accounts);
+	public void printAccountBalance() {
+		MenuPrinter.printShowAccounts(accounts);
 	}
 
-	public void printTransferableFromAccounts(double requestAmount, MenuPrinter menuPrinter) {
+	public void printAccountsToText() {
+		MenuPrinter.printAccountsToText(accounts);
+	}
+
+	public void printTransferableFromAccounts(double requestAmount) {
 		ArrayList<Account> transferableFromAccounts = new ArrayList<Account>();
 		for(Account a : accounts) {
 			if (a.getCurrentBalance() >= requestAmount){
 				transferableFromAccounts.add(a);
 			}
 		}
-		menuPrinter.printTransferableFrom(transferableFromAccounts);
+		MenuPrinter.printTransferableFrom(transferableFromAccounts);
 	}
 
-	public void executeTransfer(int fromAccountID, int toAccountID, double requestAmount, MenuPrinter menuPrinter){
+	public void printDepositToAccounts() {
+		MenuPrinter.printDepositTo(accounts);
+	}
+
+	public void executeTransfer(int fromAccountID, int toAccountID, double requestAmount){
 		Account fromAccount = accounts.get(fromAccountID);
 		Account toAccount = accounts.get(toAccountID);
 		fromAccount.withdraw(requestAmount);
 		toAccount.deposit(requestAmount);
-		menuPrinter.printSuccess();
-		menuPrinter.printShowAccounts(accounts);
+		MenuPrinter.printSuccess();
+		MenuPrinter.printShowAccounts(accounts);
 	}
 
-	public void printTransferableToAccounts(int fromAccountID, MenuPrinter menuPrinter) {
-		menuPrinter.printTransferableTo(accounts, fromAccountID);
+	public void executeWithdraw(int fromAccountID, double requestAmount){
+		Account fromAccount = accounts.get(fromAccountID);
+		fromAccount.withdraw(requestAmount);
+		MenuPrinter.printSuccess();
+		MenuPrinter.printShowAccounts(accounts);
+	}
+
+	public void executeDeposit(int toAccountID, double requestAmount){
+		Account toAccount = accounts.get(toAccountID);
+		toAccount.deposit(requestAmount);
+		MenuPrinter.printSuccess();
+		MenuPrinter.printShowAccounts(accounts);
+	}
+
+	public void printTransferableToAccounts(int fromAccountID) {
+		MenuPrinter.printTransferableTo(accounts, fromAccountID);
 	}
 
 	public void addAccount(Account account) {
-		accounts.add(account);		
+		accounts.add(account);
 	}
 
 	public void freezeAccounts() {
@@ -55,5 +87,6 @@ public class Customer {
 		for (int i = accounts.size(); i > 0; i --) {
 			accounts.get(i).unfreezeAccount();
 		}
+
 	}
 }

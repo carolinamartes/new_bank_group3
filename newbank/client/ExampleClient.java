@@ -8,40 +8,49 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ExampleClient extends Thread{
+	private Socket server;
+	private PrintWriter bankServerOut;	
+	private BufferedReader userInput;
+	private Thread bankServerResponseThread;
 	
-	private final Socket server;
-	private final PrintWriter bankServerOut;
-	private final BufferedReader userInput;
-
 	public ExampleClient(String ip, int port) throws UnknownHostException, IOException {
 		server = new Socket(ip,port);
 		userInput = new BufferedReader(new InputStreamReader(System.in)); 
 		bankServerOut = new PrintWriter(server.getOutputStream(), true);
 
-		Thread bankServerResponseThread = new Thread() {
-			private final BufferedReader bankServerIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
-
+		bankServerResponseThread = new Thread() {
+			private BufferedReader bankServerIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
 			public void run() {
 				try {
-					while (true) {
+					while(true) {
 						String response = bankServerIn.readLine();
+						//This statement prevents a series of nulls when entering an incorrect password three times
+						if(response == null){
+							Thread.currentThread().interrupt();
+							System.exit(0);
+						}
 						System.out.println(response);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
+					return;
 				}
 			}
 		};
 		bankServerResponseThread.start();
 	}
-	
-	
+
 	public void run() {
 		while(true) {
 			try {
 				while(true) {
 					String command = userInput.readLine();
 					bankServerOut.println(command);
+					if(command.equals("LOGOUT")){
+					bankServerOut.close();
+					server.close();
+					System.exit(0);
+					}
 				}				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -53,4 +62,4 @@ public class ExampleClient extends Thread{
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 		new ExampleClient("localhost",14002).start();
 	}
-}
+} 

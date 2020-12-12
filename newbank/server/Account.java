@@ -1,39 +1,36 @@
 package newbank.server;
 
 public class Account {
-	
-	private final String accountName;
+
+	private AccountType accountType;
+	private double openingBalance;
 	private double currentBalance;
 	private boolean isFrozen = false;
 
-	public Account(String accountName, double openingBalance) {
-		this.accountName = accountName;
-		// We will later on build the logic for updating
-		// openingBalance to currentBalance
+	public Account(AccountType accountType, double openingBalance) {
+		this.accountType = accountType;
+		this.openingBalance = openingBalance;
 		this.currentBalance = openingBalance;
-
 	}
 
 	public double getCurrentBalance (){
-			return currentBalance;
+		return currentBalance;
 	}
 
 	public void withdraw (double withdrawAmount) {
-		if (!isFrozen) {
-			currentBalance -= withdrawAmount;
-		}
+		currentBalance-= withdrawAmount;
 	}
 
 	public void deposit (double depositAmount) {
 		currentBalance+= depositAmount;
 	}
 
-	public String getAccountName (){
-		return accountName;
+	public AccountType getAccountType (){
+		return accountType;
 	}
 
 	public String toString() {
-		return (accountName + ": " + currentBalance);
+		return (accountType.getKey() + ": " + currentBalance);
 	}
 
 	public void freezeAccount() {
@@ -42,4 +39,5 @@ public class Account {
 	public void unfreezeAccount() {
 		isFrozen = false;
 	}
+
 }

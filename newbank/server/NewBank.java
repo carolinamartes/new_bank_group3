@@ -3,34 +3,59 @@ package newbank.server;
 import java.util.HashMap;
 
 public class NewBank {
-	
+
+	public static final String [] commands = new String[]{
+		"SENDMONEY",
+		"SHOWMYACCOUNTS",
+		"MOVEMYMONEY",
+		"WITHDRAW",
+		"DEPOSIT",
+		"NEWACCOUNT",
+		"LOGOUT"
+	};
 	private static final NewBank bank = new NewBank();
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
-	private HashMap<String,CustomerPassword> LoginCred;
-
+	private static HashMap<String,CustomerPassword> LoginCred;
+	private static HashMap<String,Employee> employees;
+	private HashMap<String, Integer> EID;
+	private HashMap<String,EmployeePassword> EmployeeLoginCred;
+	
 	private NewBank() {
 		ID = new HashMap<>();
 		customers = new HashMap<>();
 		LoginCred = new HashMap<>();
+		EID = new HashMap<>();
+		employees = new HashMap<>();
+		EmployeeLoginCred = new HashMap<>();
 		addTestData();
 	}
 
 	private void addTestData() {
+		AccountType mainAccountType = new AccountType("Main");
+		AccountType savingAccountType = new AccountType("Saving");
+		AccountType checkingAccountType = new AccountType("Checking");
+
 		Customer bhagy = new Customer(01);
-		bhagy.addAccount(new Account("Main", 1000.0));
+		bhagy.addAccount(new Account(mainAccountType, 1000.0));
 		customers.put("Bhagy", bhagy);
-		LoginCred.put("Bhagy",new CustomerPassword("Bhagy123"));
+		LoginCred.put("Bhagy",new CustomerPassword("Bhagy1234"));
 
 		Customer christina = new Customer(02);
-		christina.addAccount(new Account("Savings", 1500.0));
+		christina.addAccount(new Account(savingAccountType, 1500.0));
 		customers.put("Christina", christina);
-		LoginCred.put("Christina",new CustomerPassword("Christina123"));
+		LoginCred.put("Christina",new CustomerPassword("Christina1234"));
 
 		Customer john = new Customer(03);
-		john.addAccount(new Account("Checking", 250.0));
+		john.addAccount(new Account(checkingAccountType, 250.0));
+		john.addAccount(new Account(savingAccountType, 500));
+		john.addAccount(new Account(mainAccountType, 2000));
 		customers.put("John", john);
-		LoginCred.put("John",new CustomerPassword("John123"));
+		LoginCred.put("John",new CustomerPassword("John1234"));
+
+		Employee richard = new Employee(01);
+		employees.put("Richard", richard);
+		EmployeeLoginCred.put("Richard", new EmployeePassword("Richard1234"));
 	}
 	
 	public static NewBank getBank() {
@@ -46,6 +71,23 @@ public class NewBank {
 		return null;
 	}
 
+	public synchronized CustomerID ChangePassword(String userName,String temp, String currentPassword) {
+		if (customers.containsKey(userName)) {
+			if (LoginCred.get(userName).verifyPassword(currentPassword)) {
+				LoginCred.get(userName).changePassword(temp);
+			}
+		}
+		return null;
+	}
+
+	public synchronized EmployeeID checkEmployeeLogInDetails(String userName, String password) {
+		if(employees.containsKey(userName)) {
+			if(EmployeeLoginCred.get(userName).verifyPassword(password))
+				return new EmployeeID(userName);
+		}
+		return null;
+	}
+
 	public synchronized String validator(CustomerID customer) {
 		if(customers.containsKey(customer.getKey())) {
 			return "valid";
@@ -53,23 +95,72 @@ public class NewBank {
 		return "invalid";
 	}
 
-	public void showMyAccounts(CustomerID customer, MenuPrinter menuPrinter) {
-		customers.get(customer.getKey()).printAccountBalance(menuPrinter);
+	public static void showMyAccounts(CustomerID customer) {
+		customers.get(customer.getKey()).printAccountBalance();
 	}
 
-	public void showTransferFromOptions(CustomerID customer, double requestAmount, MenuPrinter menuPrinter) {
-		customers.get(customer.getKey()).printTransferableFromAccounts(requestAmount, menuPrinter);
+	public static void printsAccountsToText(CustomerID customer) {
+		customers.get(customer.getKey()).printAccountsToText();
+	}
+	public static void showTransferFromOptions(CustomerID customer, double requestAmount) {
+		customers.get(customer.getKey()).printTransferableFromAccounts(requestAmount);
 	}
 
-	public void showTransferToOptions(CustomerID customer, int fromAccount, MenuPrinter menuPrinter) {
-		customers.get(customer.getKey()).printTransferableToAccounts(fromAccount, menuPrinter);
+	public static void showTransferToOptions(CustomerID customer, int fromAccount) {
+		customers.get(customer.getKey()).printTransferableToAccounts(fromAccount);
 	}
 
-	public void executeTransfer(CustomerID customer, int fromAccount, int toAccount, double requestAmount, MenuPrinter menuPrinter){
-		customers.get(customer.getKey()).executeTransfer(fromAccount, toAccount, requestAmount, menuPrinter);
+	public static void showDepositOptions(CustomerID customer) {
+		customers.get(customer.getKey()).printDepositToAccounts();
+	}
+
+	public static void executeTransfer(CustomerID customer, int fromAccount, int toAccount, double requestAmount){
+		customers.get(customer.getKey()).executeTransfer(fromAccount, toAccount, requestAmount);
+	}
+
+	public static void executeWithdraw(CustomerID customer, int fromAccount, double requestAmount){
+		customers.get(customer.getKey()).executeWithdraw(fromAccount, requestAmount);
+	}
+
+	public static void executeDeposit(CustomerID customer, int toAccount, double requestAmount){
+		customers.get(customer.getKey()).executeDeposit(toAccount, requestAmount);
+	}
+
+	public static Integer getAccountID(String recipient){
+		if (customers.containsKey(recipient)){
+			return customers.get(recipient).getCheckings();
+		}
+		return -1;
+	}
+
+	public static void executeSendMoney(CustomerID customer, String recipient, Integer toAccountID, Integer fromAccountIndex, double requestAmount){
+		customers.get(customer.getKey()).executeWithdraw(fromAccountIndex, requestAmount);
+		customers.get(recipient).executeDeposit(toAccountID, requestAmount);
+	}
+
+	public static void createCustomer(String userName) {
+		//checks customer of same name does not exist
+		if(customers.containsKey(userName)) {
+			System.out.println("User already exists.");
+		}
+		else{
+			Customer newCustomer = new Customer(customers.size()+1);
+			customers.put(userName, newCustomer);
+			String password = userName + "123";
+			LoginCred.put(userName,new CustomerPassword(password));
+		}
+	}
+
+	public static void createAccount(String customerName){
+		AccountType mainAccountType = new AccountType("Main");
+		customers.get(customerName).addAccount(new Account(mainAccountType, 0));
 	}
 
 	public void freezeAccounts(CustomerID customer, MenuPrinter menuPrinter) {
 		customers.get(customer.getKey()).freezeAccounts();
 	}
+	public void unfreezeAccounts(CustomerID customer, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).unfreezeAccounts();
+	}
 }
+ 

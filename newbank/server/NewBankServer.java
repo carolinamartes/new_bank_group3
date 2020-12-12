@@ -17,13 +17,9 @@ public class NewBankServer extends Thread{
 		System.out.println("New Bank Server listening on " + server.getLocalPort());
 		try {
 			while(true) {
-				try {
-					Socket s = server.accept();
-					NewBankClientHandler clientHandler = new NewBankClientHandler(s);
-					clientHandler.start();
-				} catch (NullPointerException e){
-					break;
-				}
+				Socket s = server.accept();
+				NewBankClientHandler clientHandler = new NewBankClientHandler(s);
+				clientHandler.start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
