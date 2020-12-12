@@ -3,21 +3,12 @@ package newbank.server;
 import java.util.HashMap;
 
 public class NewBank {
-
-	public static final String [] commands = new String[]{
-			"SENDMONEY",
-			"SHOWMYACCOUNTS",
-			"MOVEMYMONEY",
-			"WITHDRAW",
-			"DEPOSIT",
-			"NEWACCOUNT",
-			"LOGOUT"
-	};
+	
 	private static final NewBank bank = new NewBank();
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
 	private HashMap<String,CustomerPassword> LoginCred;
-	
+
 	private NewBank() {
 		ID = new HashMap<>();
 		customers = new HashMap<>();
@@ -62,44 +53,23 @@ public class NewBank {
 		return "invalid";
 	}
 
-	public static void showMyAccounts(CustomerID customer) {
-		customers.get(customer.getKey()).printAccountBalance();
+	public void showMyAccounts(CustomerID customer, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).printAccountBalance(menuPrinter);
 	}
 
-	public static void showTransferFromOptions(CustomerID customer, double requestAmount) {
-		customers.get(customer.getKey()).printTransferableFromAccounts(requestAmount);
+	public void showTransferFromOptions(CustomerID customer, double requestAmount, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).printTransferableFromAccounts(requestAmount, menuPrinter);
 	}
 
-	public static void showTransferToOptions(CustomerID customer, int fromAccount) {
-		customers.get(customer.getKey()).printTransferableToAccounts(fromAccount);
+	public void showTransferToOptions(CustomerID customer, int fromAccount, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).printTransferableToAccounts(fromAccount, menuPrinter);
 	}
 
-	public static void showDepositOptions(CustomerID customer) {
-		customers.get(customer.getKey()).printDepositToAccounts();
+	public void executeTransfer(CustomerID customer, int fromAccount, int toAccount, double requestAmount, MenuPrinter menuPrinter){
+		customers.get(customer.getKey()).executeTransfer(fromAccount, toAccount, requestAmount, menuPrinter);
 	}
 
-	public static void executeTransfer(CustomerID customer, int fromAccount, int toAccount, double requestAmount){
-		customers.get(customer.getKey()).executeTransfer(fromAccount, toAccount, requestAmount);
+	public void freezeAccounts(CustomerID customer, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).freezeAccounts();
 	}
-
-	public static void executeWithdraw(CustomerID customer, int fromAccount, double requestAmount){
-		customers.get(customer.getKey()).executeWithdraw(fromAccount, requestAmount);
-	}
-
-	public static void executeDeposit(CustomerID customer, int toAccount, double requestAmount){
-		customers.get(customer.getKey()).executeDeposit(toAccount, requestAmount);
-	}
-
-	public static Integer getAccountID(String recipient){
-		if (customers.containsKey(recipient)){
-			return customers.get(recipient).getCheckings();
-		}
-		return -1;
-	}
-
-	public static void executeSendMoney(CustomerID customer, String recipient, Integer toAccountID, Integer fromAccountIndex, double requestAmount){
-		customers.get(customer.getKey()).executeWithdraw(fromAccountIndex, requestAmount);
-		customers.get(recipient).executeDeposit(toAccountID, requestAmount);
-	}
-
 }

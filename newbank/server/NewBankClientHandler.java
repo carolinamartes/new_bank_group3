@@ -13,10 +13,8 @@ public class NewBankClientHandler extends Thread {
 	private final BufferedReader in;
 	private final PrintWriter out;
 	private final MenuPrinter menuPrinter;
-	private static Stack<String> state = new Stack<String>();
-	int fromAccountIndex = 0;
-	int toAccountIndex = 0;
-	double requestAmount = 0.0;
+	private RequestProcessor requestProcessor;
+	//private static final Stack<String> state = new Stack<String>();
 
 	public NewBankClientHandler(Socket s) throws IOException {
 		bank = NewBank.getBank();
@@ -52,36 +50,22 @@ public class NewBankClientHandler extends Thread {
 	}
 
 	public void run() {
-
 		menuPrinter.printLogo();
-
-		// keep getting requests from the client and processing them
 		try {
-
-			// ask for user name and password
-			out.println("Enter Username");
-			String userName = in.readLine();
-			out.println("Enter Password");
-			String password = in.readLine();
-			out.println("Checking Details...");
-
-			// authenticate user and get customer ID token from bank for use in subsequent requests
-			CustomerID customer = bank.checkLogInDetails(userName, password);
-
-			// if the user is authenticated then get requests from the user and process them
+			CustomerID customer = login();
 			if(customer != null) {
-
+				// Start logout timer
+				Time timer = new Time();
 				out.println("Log In Successful. What do you want to do?");
-				MenuPrinter.printOptions();
-				while(true) {
-
+				timer.timer(in, menuPrinter);
+				// Accept input while the timer is running
+				while (!timer.n) {
 					String request = in.readLine();
-
+					timer.reset();
 					System.out.println("Request from " + customer.getKey());
-					processRequest(customer, request);
-
-					}
-
+					requestProcessor.processRequest(customer,request, menuPrinter, bank);
+				}
+				logout();
 			}
 			else {
 				out.println("Log In Failed");
@@ -100,81 +84,43 @@ public class NewBankClientHandler extends Thread {
 		}
 	}
 
-	public synchronized void processRequest(CustomerID customer, String request) {
+	public void logout() {
+		out.println("You have been logged out");
+		try {
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*public synchronized void processRequest(CustomerID customer, String request) {
+		Customer customerObj = bank
 		if (request.equals("1") || request.equals("2")){
+			System.out.println("HERE");
 			if (state.peek().equals("TRANSFERFROM")) {
 				fromAccountIndex = Integer.parseInt(request) - 1;
 			}
 			if (state.peek().equals("TRANSFERTO")) {
 				toAccountIndex = Integer.parseInt(request) - 1;
 			}
-			if (state.peek().equals("SEND")) {
-				fromAccountIndex = Integer.parseInt(request) - 1;
-			}
 		}
 		if (request.startsWith("TRANSFERAMOUNT")){
-			boolean validAmount = checkIfValidAmountFormat(request, "TRANSFERAMOUNT ");
-			if (validAmount) {
-				NewBank.showTransferFromOptions(customer, requestAmount);
-				state.push("TRANSFERFROM");
-			}
-			return;
-		}
-		if (request.startsWith("WITHDRAWAMOUNT")){
-			boolean validAmount = checkIfValidAmountFormat(request, "WITHDRAWAMOUNT ");
-			if (validAmount){
-				NewBank.showTransferFromOptions(customer, requestAmount);
-				state.push("WITHDRAW");
-			}
-			return;
-		}
-		if (request.startsWith("DEPOSITAMOUNT")){
-			boolean validAmount = checkIfValidAmountFormat(request, "DEPOSITAMOUNT ");
-			if (validAmount){
-				NewBank.showDepositOptions(customer);
-				state.push("DEPOSIT");
-			}
-			return;
-		}
-		if (request.startsWith("SENDAMOUNT")){
-			boolean validAmount = checkIfValidAmountFormat(request, "SENDAMOUNT ");
-			if (validAmount){
-				NewBank.showTransferFromOptions(customer, requestAmount);
-				state.push("SEND");
-			}
-			return;
-		}
-		if (request.startsWith("RECIPIENT")){
 			String requestString = request;
-			String recipient = requestString.replace("RECIPIENT ", "");
-			Integer toAccountID = NewBank.getAccountID(recipient);
-			if (toAccountID >= 0){
-				NewBank.executeSendMoney(customer, recipient, toAccountID, fromAccountIndex, requestAmount);
-			}
-			else {
-				MenuPrinter.printFail();
-			}
+			requestAmount = Double.parseDouble(requestString.replace("TRANSFERAMOUNT ", ""));
+			bank.showTransferFromOptions(customer, requestAmount, menuPrinter);
+			state.push("TRANSFERFROM");
 			return;
 		}
 		switch (request) {
-			case "SENDMONEY" :
-				menuPrinter.askSendQuantity();
-				state.push(request);
-				break;
+			case "FREEZEACCOUNTS" :
+
 			case "SHOWMYACCOUNTS" :
-				NewBank.showMyAccounts(customer);
+				bank.showMyAccounts(customer, menuPrinter);
 				state.push(request);
 				break;
 			case "MOVEMYMONEY" :
 				menuPrinter.askTransferQuantity();
-				state.push(request);
-				break;
-			case "WITHDRAW" :
-				menuPrinter.askWithdrawQuantity();
-				state.push(request);
-				break;
-			case "DEPOSIT" :
-				menuPrinter.askDepositQuantity();
 				state.push(request);
 				break;
 			case "NEWACCOUNT" :
@@ -191,29 +137,17 @@ public class NewBankClientHandler extends Thread {
 				break;
 			case "1" :
 			case "2" :
-				if (state.peek().equals("SEND")){
-					menuPrinter.askRecipient();
-					break;
-				}
 				if (state.peek().equals("NEWACCOUNT")){
 					menuPrinter.printNewAccountsPg2();
 					break;
 				}
 				if (state.peek().equals("TRANSFERFROM")){
-					NewBank.showTransferToOptions(customer, fromAccountIndex);
+					bank.showTransferToOptions(customer, fromAccountIndex, menuPrinter);
 					state.push("TRANSFERTO");
 					break;
 				}
 				if (state.peek().equals("TRANSFERTO")){
-					NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
-					break;
-				}
-				if (state.peek().equals("WITHDRAW")){
-					NewBank.executeWithdraw(customer, fromAccountIndex, requestAmount);
-					break;
-				}
-				if (state.peek().equals("DEPOSIT")){
-					NewBank.executeDeposit(customer, toAccountIndex, requestAmount);
+					bank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount, menuPrinter);
 					break;
 				}
 				else {
@@ -221,18 +155,8 @@ public class NewBankClientHandler extends Thread {
 					break;
 				}
 			default :
-				menuPrinter.printFail();
+				MenuPrinter.printFail();
 				break;
 		}
-	}
-	public boolean checkIfValidAmountFormat(String requestString, String parseString){
-		try {
-			requestAmount = Double.parseDouble(requestString.replace(parseString, ""));
-			return true;
-		}
-		catch(NumberFormatException e){
-			MenuPrinter.printFail();
-			return false;
-		}
-	}
+	}*/
 }
