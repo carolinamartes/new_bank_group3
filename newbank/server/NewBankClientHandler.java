@@ -40,42 +40,34 @@ public class NewBankClientHandler extends Thread {
 			// authenticate user and get customer ID token from bank for use in subsequent requests
 			CustomerID customer = bank.checkLogInDetails(userName, password);
 			// if the user is authenticated then get requests from the user and process them
-			if (customer != null)
+			if (customer != null) {
 				return customer;
+			}
 			out.println("Invalid Username or Password");
 			attempt++;
-
 		}
 		out.println("Maximum Number of login attempts for this session reached");
 		return null;
 	}
 
 	public void run() {
-
 		menuPrinter.printLogo();
-
 		// keep getting requests from the client and processing them
 		try {
-
 			out.println("Welcome to NewBank");
 			CustomerID customer = null;
 			customer = login();
 			if (customer != null) {
 				out.println("Log In Successful. What do you want to do?");
-
-
+				menuPrinter.printOptions();
 				while (true) {
-
 					String request = in.readLine();
-
 					System.out.println("Request from " + customer.getKey());
 					processRequest(customer, request);
-
 				}
 
 			} else {
 				out.println("Log In Failed");
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -105,7 +97,7 @@ public class NewBankClientHandler extends Thread {
 		if (request.startsWith("TRANSFERAMOUNT")){
 			boolean validAmount = checkIfValidAmountFormat(request, "TRANSFERAMOUNT ");
 			if (validAmount) {
-				NewBank.showTransferFromOptions(customer, requestAmount);
+				bank.showTransferFromOptions(customer, requestAmount);
 				state.push("TRANSFERFROM");
 			}
 			return;
@@ -113,7 +105,7 @@ public class NewBankClientHandler extends Thread {
 		if (request.startsWith("WITHDRAWAMOUNT")){
 			boolean validAmount = checkIfValidAmountFormat(request, "WITHDRAWAMOUNT ");
 			if (validAmount){
-				NewBank.showTransferFromOptions(customer, requestAmount);
+				bank.showTransferFromOptions(customer, requestAmount);
 				state.push("WITHDRAW");
 			}
 			return;
@@ -121,7 +113,7 @@ public class NewBankClientHandler extends Thread {
 		if (request.startsWith("DEPOSITAMOUNT")){
 			boolean validAmount = checkIfValidAmountFormat(request, "DEPOSITAMOUNT ");
 			if (validAmount){
-				NewBank.showDepositOptions(customer);
+				bank.showDepositOptions(customer);
 				state.push("DEPOSIT");
 			}
 			return;
@@ -129,7 +121,7 @@ public class NewBankClientHandler extends Thread {
 		if (request.startsWith("SENDAMOUNT")){
 			boolean validAmount = checkIfValidAmountFormat(request, "SENDAMOUNT ");
 			if (validAmount){
-				NewBank.showTransferFromOptions(customer, requestAmount);
+				bank.showTransferFromOptions(customer, requestAmount);
 				state.push("SEND");
 			}
 			return;
@@ -137,12 +129,12 @@ public class NewBankClientHandler extends Thread {
 		if (request.startsWith("RECIPIENT")){
 			String requestString = request;
 			String recipient = requestString.replace("RECIPIENT ", "");
-			Integer toAccountID = NewBank.getAccountID(recipient);
+			Integer toAccountID = bank.getAccountID(recipient);
 			if (toAccountID >= 0){
-				NewBank.executeSendMoney(customer, recipient, toAccountID, fromAccountIndex, requestAmount);
+				bank.executeSendMoney(customer, recipient, toAccountID, fromAccountIndex, requestAmount);
 			}
 			else {
-				MenuPrinter.printFail();
+				menuPrinter.printFail();
 			}
 			return;
 		}
@@ -152,11 +144,11 @@ public class NewBankClientHandler extends Thread {
 				state.push(request);
 				break;
 			case "SHOWMYACCOUNTS" :
-				NewBank.showMyAccounts(customer);
+				bank.showMyAccounts(customer);
 				state.push(request);
 				break;
 			case "PRINTACCOUNTS":
-				NewBank.printsAccountsToText(customer);
+				bank.printsAccountsToText(customer);
 				state.push(request);
 				break;
 			case "MOVEMYMONEY" :
@@ -195,8 +187,6 @@ public class NewBankClientHandler extends Thread {
 						}
 					}
 				}
-
-
 				break;
 			case "DEPOSIT" :
 				menuPrinter.askDepositQuantity();
@@ -225,20 +215,20 @@ public class NewBankClientHandler extends Thread {
 					break;
 				}
 				if (state.peek().equals("TRANSFERFROM")){
-					NewBank.showTransferToOptions(customer, fromAccountIndex);
+					bank.showTransferToOptions(customer, fromAccountIndex);
 					state.push("TRANSFERTO");
 					break;
 				}
 				if (state.peek().equals("TRANSFERTO")){
-					NewBank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
+					bank.executeTransfer(customer, fromAccountIndex, toAccountIndex, requestAmount);
 					break;
 				}
 				if (state.peek().equals("WITHDRAW")){
-					NewBank.executeWithdraw(customer, fromAccountIndex, requestAmount);
+					bank.executeWithdraw(customer, fromAccountIndex, requestAmount);
 					break;
 				}
 				if (state.peek().equals("DEPOSIT")){
-					NewBank.executeDeposit(customer, toAccountIndex, requestAmount);
+					bank.executeDeposit(customer, toAccountIndex, requestAmount);
 					break;
 				}
 				else {
@@ -256,7 +246,7 @@ public class NewBankClientHandler extends Thread {
 			return true;
 		}
 		catch(NumberFormatException e){
-			MenuPrinter.printFail();
+			menuPrinter.printFail();
 			return false;
 		}
 	}
