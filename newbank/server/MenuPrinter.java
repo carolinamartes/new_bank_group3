@@ -175,6 +175,14 @@ public class MenuPrinter {
         System.out.println("printAccountStatement");
     }
 
+    public static void askCustomerName(){
+        out.println("Enter the customer username to create a new account. Write NEWACCOUNT {{username}}");
+    }
+
+    public static void askNewName(){
+        out.println("Enter the customer's name to create a new customer. Write NEWCUSTOMER {{username}}");
+    }
+
     public static void printLogOut(){
         out.println("Are you sure you want to log out? (y/n)");
     }

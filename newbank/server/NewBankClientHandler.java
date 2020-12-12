@@ -250,6 +250,48 @@ public class NewBankClientHandler extends Thread {
 				break;
 		}
 	}
+
+	public synchronized void processEmployeeRequest(EmployeeID employee, String request) {
+
+		if (request.startsWith("NEWACCOUNT")) {
+			String requestString = request;
+			String accountName = requestString.replace("NEWACCOUNT ", "");
+			Account account = new Account(accountName, 0);
+			NewBank.createAccount(accountName, account);
+			state.push("CREATEACCOUNT");
+			return;
+		}
+
+		if (request.startsWith("NEWCUSTOMER")) {
+			String requestString = request;
+			String customerName = requestString.replace("NEWCUSTOMER ", "");
+			NewBank.createCustomer(customerName);
+			state.push("CREATECUSTOMER");
+			return;
+		}
+
+		switch (request) {
+			case "CREATEACCOUNT":
+				menuPrinter.askCustomerName();
+				state.push(request);
+				break;
+			case "CREATECUSTOMER":
+				menuPrinter.askNewName();
+				state.push(request);
+				break;
+			case "LOGOUT":
+				menuPrinter.printLogOut();
+				state.push(request);
+				break;
+			case "BACK":
+				request = state.pop();
+				processEmployeeRequest(employee, request);
+				break;
+			default:
+				menuPrinter.printFail();
+				break;
+		}
+	}
 	public boolean checkIfValidAmountFormat(String requestString, String parseString){
 		try {
 			requestAmount = Double.parseDouble(requestString.replace(parseString, ""));
