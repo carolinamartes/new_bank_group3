@@ -1,20 +1,15 @@
 package newbank.server;
 
 public class Account {
-	
-	private String accountName;
-	private String accountType;
+
+	private AccountType accountType;
 	private double openingBalance;
 	private double currentBalance;
 
-	public Account(String accountName, double openingBalance) {
-		this.accountName = accountName;
+	public Account(AccountType accountType, double openingBalance) {
 		this.accountType = accountType;
 		this.openingBalance = openingBalance;
-		// We will later on build the logic for updating
-		// openingBalance to currentBalance
 		this.currentBalance = openingBalance;
-
 	}
 
 	public double getCurrentBalance (){
@@ -29,12 +24,12 @@ public class Account {
 		currentBalance+= depositAmount;
 	}
 
-	public String getAccountName (){
-		return accountName;
+	public AccountType getAccountType (){
+		return accountType;
 	}
 
 	public String toString() {
-		return (accountName + ": " + currentBalance);
+		return (accountType.getKey() + ": " + currentBalance);
 	}
 
 }

@@ -87,7 +87,7 @@ public class MenuPrinter {
             int current = i + 1;
             if (!accounts.get(i).equals(fromAccount)) {
                 out.print("(" + current + ") ");
-                out.println(accounts.get(i).getAccountName());
+                out.println(accounts.get(i).getAccountType().getKey());
             }
         }
     }
@@ -122,7 +122,7 @@ public class MenuPrinter {
         for(int i=0; i < accounts.size();i++){
             int current = i + 1;
             out.print("("+ current +") ");
-            out.println(accounts.get(i).getAccountName());
+            out.println(accounts.get(i).getAccountType().getKey());
         }
     }
 
@@ -136,7 +136,7 @@ public class MenuPrinter {
         for(int i=0; i < accounts.size();i++){
             int current = i + 1;
             out.print("("+ current +") ");
-            out.println(accounts.get(i).getAccountName());
+            out.println(accounts.get(i).getAccountType().getKey());
         }
     }
 

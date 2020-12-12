@@ -26,20 +26,24 @@ public class NewBank {
 	}
 
 	private void addTestData() {
+		AccountType mainAccountType = new AccountType("Main");
+		AccountType savingAccountType = new AccountType("Saving");
+		AccountType checkingAccountType = new AccountType("Checking");
+
 		Customer bhagy = new Customer(01);
-		bhagy.addAccount(new Account("Main", 1000.0));
+		bhagy.addAccount(new Account(mainAccountType, 1000.0));
 		customers.put("Bhagy", bhagy);
 		LoginCred.put("Bhagy",new CustomerPassword("Bhagy1234"));
 
 		Customer christina = new Customer(02);
-		christina.addAccount(new Account("Savings", 1500.0));
+		christina.addAccount(new Account(savingAccountType, 1500.0));
 		customers.put("Christina", christina);
 		LoginCred.put("Christina",new CustomerPassword("Christina1234"));
 
 		Customer john = new Customer(03);
-		john.addAccount(new Account("Checking", 250.0));
-		john.addAccount(new Account("Saving", 500));
-		john.addAccount(new Account("Main", 2000));
+		john.addAccount(new Account(checkingAccountType, 250.0));
+		john.addAccount(new Account(savingAccountType, 500));
+		john.addAccount(new Account(mainAccountType, 2000));
 		customers.put("John", john);
 		LoginCred.put("John",new CustomerPassword("John1234"));
 	}
