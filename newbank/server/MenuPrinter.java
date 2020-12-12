@@ -191,6 +191,10 @@ public class MenuPrinter {
         out.println("What do you want to do?");
     }
 
+    public static void printInvalidRequest(){
+        out.println("Invalid Request");
+    }
+
     public static void printFail(){
         out.println("Oops, something went wrong!");
         System.out.println("Error from client");
