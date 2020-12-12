@@ -3,7 +3,6 @@ package newbank.server;
 import java.util.ArrayList;
 
 public class Customer {
-	private final MenuPrinter menuPrinter;
 	private ArrayList<Account> accounts;
 	private Integer ID;
 	private String CustomerPassword;
@@ -27,11 +26,11 @@ public class Customer {
 	}
 	
 	public void printAccountBalance() {
-		menuPrinter.printShowAccounts(accounts);
+		MenuPrinter.printShowAccounts(accounts);
 	}
 
 	public void printAccountsToText() {
-		menuPrinter.printAccountsToText(accounts);
+		MenuPrinter.printAccountsToText(accounts);
 	}
 
 	public void printTransferableFromAccounts(double requestAmount) {
@@ -41,11 +40,11 @@ public class Customer {
 				transferableFromAccounts.add(a);
 			}
 		}
-		menuPrinter.printTransferableFrom(transferableFromAccounts);
+		MenuPrinter.printTransferableFrom(transferableFromAccounts);
 	}
 
 	public void printDepositToAccounts() {
-		menuPrinter.printDepositTo(accounts);
+		MenuPrinter.printDepositTo(accounts);
 	}
 
 	public void executeTransfer(int fromAccountID, int toAccountID, double requestAmount){
@@ -53,26 +52,26 @@ public class Customer {
 		Account toAccount = accounts.get(toAccountID);
 		fromAccount.withdraw(requestAmount);
 		toAccount.deposit(requestAmount);
-		menuPrinter.printSuccess();
-		menuPrinter.printShowAccounts(accounts);
+		MenuPrinter.printSuccess();
+		MenuPrinter.printShowAccounts(accounts);
 	}
 
 	public void executeWithdraw(int fromAccountID, double requestAmount){
 		Account fromAccount = accounts.get(fromAccountID);
 		fromAccount.withdraw(requestAmount);
-		menuPrinter.printSuccess();
-		menuPrinter.printShowAccounts(accounts);
+		MenuPrinter.printSuccess();
+		MenuPrinter.printShowAccounts(accounts);
 	}
 
 	public void executeDeposit(int toAccountID, double requestAmount){
 		Account toAccount = accounts.get(toAccountID);
 		toAccount.deposit(requestAmount);
-		menuPrinter.printSuccess();
-		menuPrinter.printShowAccounts(accounts);
+		MenuPrinter.printSuccess();
+		MenuPrinter.printShowAccounts(accounts);
 	}
 
 	public void printTransferableToAccounts(int fromAccountID) {
-		menuPrinter.printTransferableTo(accounts, fromAccountID);
+		MenuPrinter.printTransferableTo(accounts, fromAccountID);
 	}
 
 	public void addAccount(Account account) {
