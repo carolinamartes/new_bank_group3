@@ -232,7 +232,7 @@ public class NewBankClientHandler extends Thread {
 					break;
 				}
 				else {
-					out.println("Invalid Request");
+					menuPrinter.printInvalidRequest();
 					break;
 				}
 			default :
@@ -243,6 +243,10 @@ public class NewBankClientHandler extends Thread {
 	public boolean checkIfValidAmountFormat(String requestString, String parseString){
 		try {
 			requestAmount = Double.parseDouble(requestString.replace(parseString, ""));
+			if (requestAmount <= 0){
+				menuPrinter.printInvalidRequest();
+				return false;
+			}
 			return true;
 		}
 		catch(NumberFormatException e){
