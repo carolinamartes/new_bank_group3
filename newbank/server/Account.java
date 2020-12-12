@@ -1,35 +1,45 @@
 package newbank.server;
 
 public class Account {
-
-	private AccountType accountType;
-	private double openingBalance;
+	
+	private final String accountName;
 	private double currentBalance;
+	private boolean isFrozen = false;
 
-	public Account(AccountType accountType, double openingBalance) {
-		this.accountType = accountType;
-		this.openingBalance = openingBalance;
+	public Account(String accountName, double openingBalance) {
+		this.accountName = accountName;
+		// We will later on build the logic for updating
+		// openingBalance to currentBalance
 		this.currentBalance = openingBalance;
+
 	}
 
 	public double getCurrentBalance (){
-		return currentBalance;
+			return currentBalance;
 	}
 
 	public void withdraw (double withdrawAmount) {
-		currentBalance-= withdrawAmount;
+		if (!isFrozen) {
+			currentBalance -= withdrawAmount;
+		}
 	}
 
 	public void deposit (double depositAmount) {
 		currentBalance+= depositAmount;
 	}
 
-	public AccountType getAccountType (){
-		return accountType;
+	public String getAccountName (){
+		return accountName;
 	}
 
 	public String toString() {
-		return (accountType.getKey() + ": " + currentBalance);
+		return (accountName + ": " + currentBalance);
 	}
 
+	public void freezeAccount() {
+		isFrozen = true;
+	}
+	public void unfreezeAccount() {
+		isFrozen = false;
+	}
 }
