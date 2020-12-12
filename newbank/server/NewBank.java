@@ -151,8 +151,9 @@ public class NewBank {
 		}
 	}
 
-	public static void createAccount(String customerName, Account account){
-		customers.get(customerName).addAccount(account);
+	public static void createAccount(String customerName){
+		AccountType mainAccountType = new AccountType("Main");
+		customers.get(customerName).addAccount(new Account(mainAccountType, 0));
 	}
 }
  

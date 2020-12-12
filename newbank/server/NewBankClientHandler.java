@@ -244,10 +244,10 @@ public class NewBankClientHandler extends Thread {
 	public synchronized void processEmployeeRequest(EmployeeID employee, String request) {
 
 		if (request.startsWith("NEWACCOUNT")) {
+			AccountType mainAccountType = new AccountType("Main");
 			String requestString = request;
-			String accountName = requestString.replace("NEWACCOUNT ", "");
-			Account account = new Account(accountName, 0);
-			NewBank.createAccount(accountName, account);
+			String customerName = requestString.replace("NEWACCOUNT ", "");
+			NewBank.createAccount(customerName);
 			state.push("CREATEACCOUNT");
 			return;
 		}
