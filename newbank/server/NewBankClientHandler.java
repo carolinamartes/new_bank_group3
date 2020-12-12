@@ -50,6 +50,31 @@ public class NewBankClientHandler extends Thread {
 		return null;
 	}
 
+	public EmployeeID emplogin() throws IOException {
+		//User will get 3 chances
+		int attempt = 0;
+		while (attempt < 3) {
+			out.println("Enter details for login");
+			out.println("Enter Username");
+			// ask for user name
+			String userName = in.readLine();
+			// ask for password
+			out.println("Enter Password");
+			String password = in.readLine();
+			out.println("Checking Details...");
+			// authenticate user and get customer ID token from bank for use in subsequent requests
+			EmployeeID employee = bank.checkEmployeeLogInDetails(userName, password);
+			// if the user is authenticated then get requests from the user and process them
+			if (employee != null)
+				return employee;
+			out.println("Invalid Username or Password");
+			attempt++;
+
+		}
+		out.println("Maximum Number of login attempts for this session reached");
+		return null;
+	}
+
 	public void run() {
 
 		menuPrinter.printLogo();
@@ -59,22 +84,46 @@ public class NewBankClientHandler extends Thread {
 
 			out.println("Welcome to NewBank");
 			CustomerID customer = null;
-			customer = login();
-			if (customer != null) {
-				out.println("Log In Successful. What do you want to do?");
+			EmployeeID employee = null;
+			out.println("Choose '1' for customer, '2' for employee.");
+			int choice = in.read();
+			if (choice == 1) {
+				customer = login();
+				if (customer != null) {
+					out.println("Log In Successful. What do you want to do?");
 
-				while(true) {
+					while (true) {
 
-					String request = in.readLine();
+						String request = in.readLine();
 
-					System.out.println("Request from " + customer.getKey());
-					processRequest(customer, request);
+						System.out.println("Request from " + customer.getKey());
+						processRequest(customer, request);
+
+					}
+
+				} else {
+					out.println("Log In Failed");
 
 				}
+			}
+			else if (choice == 2){
+				employee = emplogin();
+				if (employee != null) {
+					out.println("Log In Successful. What do you want to do?");
 
-			} else {
-				out.println("Log In Failed");
+					while (true) {
 
+						String request = in.readLine();
+
+						System.out.println("Request from " + employee.getKey());
+						processEmployeeRequest(employee, request);
+
+					}
+
+				} else {
+					out.println("Log In Failed");
+
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
