@@ -19,7 +19,7 @@ public class Customer {
 
 	public int getCheckings() {
 		for(Account a : accounts) {
-			if (a.getAccountName() == "Checking"){
+			if (a.getAccountType().getKey().equals("Checking")){
 				return accounts.indexOf(a);
 			}
 		}
