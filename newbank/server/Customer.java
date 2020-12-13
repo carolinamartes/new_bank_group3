@@ -81,7 +81,8 @@ public class Customer extends BankUser {
 	public void removeAccount(AccountType accountType){
 		for(Account a : accounts){
 			if (a.getAccountType() == accountType){
-				accounts.remove(a.getAccountType());
+				int index = accounts.indexOf(a);
+				accounts.remove(index);
 			}
 		}
 	}
