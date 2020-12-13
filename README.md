@@ -19,7 +19,7 @@ Customers can interact with the bank by using any of the following commands:
 * LOGOUT
 * CHANGEPASSWORD
 
- 
+
 Password authentication- Clients can now log into NewBank using their username and password.
 Changing Passwords- Clients now have the functionality to update their password in NewBank.
 LogOut- Clients can log out of Example Client upon completion of their session.
