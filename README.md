@@ -20,10 +20,10 @@ Customers can interact with the bank by using any of the following commands:
 * CHANGEPASSWORD
 
 
-Password authentication- Clients can now log into NewBank using their username and password.
-Changing Passwords- Clients now have the functionality to update their password in NewBank.
-logOut- Clients can log out of Example Client upon completion of their session.
-Catching Password null loops- After three incorrect password entries, example client will now automatically close in order to prevent further password attempts from a user.
+Password authentication- Clients can now log into NewBank using their username and password.<br>
+Changing Passwords- Clients now have the functionality to update their password in NewBank.<br>
+logOut- Clients can log out of Example Client upon completion of their session.<br>
+Catching Password null loops- After three incorrect password entries, example client will now automatically close in order to prevent further password attempts from a user.<br>
 Printing Account Balances to text – Clients can now print their Account balances to a local saved text file (works on both Windows and Mac OS).
   
 Employees can interact with the bank by using any of the following commands:
