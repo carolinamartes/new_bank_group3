@@ -58,12 +58,14 @@ public class NewBankClientHandler extends Thread {
 			CustomerID customer = null;
 			customer = login();
 			if (customer != null) {
+				Time timer = new Time();
+				timer.timer(in, menuPrinter);
 				out.println("Log In Successful. What do you want to do?");
 				menuPrinter.printOptions();
-				while (true) {
+				while (!timer.n) {
 					String request = in.readLine();
+					timer.reset();
 					System.out.println("Request from " + customer.getKey());
-					processRequest(customer, request);
 				}
 
 			} else {
@@ -139,6 +141,10 @@ public class NewBankClientHandler extends Thread {
 			return;
 		}
 		switch (request) {
+			case "UNFREEZEACCOUNTS" :
+				bank.unfreezeAccounts(customer, menuPrinter);
+			case "FREEZEACCOUNTS" :
+				bank.freezeAccounts(customer, menuPrinter);
 			case "SENDMONEY" :
 				menuPrinter.askSendQuantity();
 				state.push(request);
