@@ -161,6 +161,10 @@ public class NewBank {
 		customers.get(customer.getKey()).addAccount(new Account(mainAccountType, requestAmount));
 	}
 
+	public static void removeAccount(CustomerID customer, AccountType accountType){
+		customers.get(customer.getKey()).removeAccount(accountType);
+	}
+
 	public static void createSaving(CustomerID customer, double requestAmount){
 		AccountType savingAccountType = new AccountType("Saving");
 		customers.get(customer.getKey()).addAccount(new Account(savingAccountType, requestAmount));

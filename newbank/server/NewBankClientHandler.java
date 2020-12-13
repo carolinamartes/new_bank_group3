@@ -162,6 +162,25 @@ public class NewBankClientHandler extends Thread {
 			}
 			return;
 		}
+		if (request.startsWith("DELETEACCOUNT")) {
+			AccountType mainAccountType = new AccountType("Main");
+			AccountType savingAccountType = new AccountType("Saving");
+			AccountType checkingAccountType = new AccountType("Checking");
+			String requestString = request;
+			String choice = requestString.replace("DELETEACCOUNT ", "");
+			if (choice == "MAIN") {
+				bank.removeAccount(customer, mainAccountType);
+				state.push("CLOSEACCOUNT");
+			}
+			if (choice == "SAVING"){
+				bank.removeAccount(customer, savingAccountType);
+				state.push("CLOSEACCOUNT");
+			}
+			if (choice == "CHECKING"){
+				bank.removeAccount(customer, checkingAccountType);
+			}
+			return;
+		}
 		switch (request) {
 			case "SENDMONEY" :
 				menuPrinter.askSendQuantity();
@@ -230,6 +249,10 @@ public class NewBankClientHandler extends Thread {
 				break;
 			case "CREATECHECKING" :
 				menuPrinter.askCheckingAmount();
+				state.push(request);
+				break;
+			case "CLOSEACCOUNT" :
+				menuPrinter.askAccountType();
 				state.push(request);
 				break;
 			case "LOGOUT" :

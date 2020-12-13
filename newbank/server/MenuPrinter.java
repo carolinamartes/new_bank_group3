@@ -193,6 +193,10 @@ public class MenuPrinter {
         out.println("How much would you like to deposit into your new Checking account. Write NEWCHECKING {{amount}}");
     }
 
+    public static void askAccountType(){
+        out.println("Which account would you like to close? Write DELETEACCOUNT {{MAIN/SAVING/CHECKING}}");
+    }
+
     public static void printLogOut(){
         out.println("Are you sure you want to log out? (y/n)");
     }

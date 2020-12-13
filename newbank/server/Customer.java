@@ -77,4 +77,12 @@ public class Customer {
 	public void addAccount(Account account) {
 		accounts.add(account);
 	}
+
+	public void removeAccount(AccountType accountType){
+		for(Account a : accounts){
+			if (a.getAccountType() == accountType){
+				accounts.remove(a.getAccountType());
+			}
+		}
+	}
 }
