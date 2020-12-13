@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class NewBank {
 
-	public static final String [] commands = new String[]{
+	public static final String [] customerCommands = new String[]{
 		"SENDMONEY",
 		"SHOWMYACCOUNTS",
 		"MOVEMYMONEY",
@@ -16,6 +16,13 @@ public class NewBank {
 		"CLOSEACCOUNT",
 		"LOGOUT"
 	};
+
+	public static final String [] employeeCommands = new String[]{
+		"CREATEACCOUNT",
+		"CREATECUSTOMER",
+		"LOGOUT"
+	};
+
 	private static final NewBank bank = new NewBank();
 	private static HashMap<String,Customer> customers;
 	private HashMap<String, Integer> ID;
@@ -66,7 +73,19 @@ public class NewBank {
 	}
 
 	//Method which handles authentication
-	public synchronized CustomerID checkLogInDetails(String userName, String password) {
+	public synchronized BankUserID checkLogInDetails(String userName, String password) {
+		if(customers.containsKey(userName)) {
+			if(LoginCred.get(userName).verifyPassword(password))
+				return new CustomerID(userName);
+		}
+		if(employees.containsKey(userName)) {
+			if(EmployeeLoginCred.get(userName).verifyPassword(password))
+				return new EmployeeID(userName);
+		}
+		return null;
+	}
+
+	public synchronized CustomerID checkCustomerLogInDetails(String userName, String password) {
 		if(customers.containsKey(userName)) {
 			if(LoginCred.get(userName).verifyPassword(password))
 				return new CustomerID(userName);

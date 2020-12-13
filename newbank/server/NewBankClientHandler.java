@@ -25,7 +25,7 @@ public class NewBankClientHandler extends Thread {
 		menuPrinter = new MenuPrinter(s);
 	}
 
-	public CustomerID login() throws IOException {
+	public BankUserID login() throws IOException {
 		//User will get 3 chances
 		int attempt = 0;
 		while (attempt < 3) {
@@ -38,10 +38,10 @@ public class NewBankClientHandler extends Thread {
 			String password = in.readLine();
 			out.println("Checking Details...");
 			// authenticate user and get customer ID token from bank for use in subsequent requests
-			CustomerID customer = bank.checkLogInDetails(userName, password);
+			BankUserID bankUser = bank.checkLogInDetails(userName, password);
 			// if the user is authenticated then get requests from the user and process them
-			if (customer != null) {
-				return customer;
+			if (bankUser != null) {
+				return bankUser;
 			}
 			out.println("Invalid Username or Password");
 			attempt++;
@@ -50,20 +50,45 @@ public class NewBankClientHandler extends Thread {
 		return null;
 	}
 
+	public EmployeeID isEmployee (BankUserID bankUser) {
+		if (bankUser.getClass().equals(EmployeeID.class)) {
+			// in the future, we would avoid this downcasting
+			// by handling employee and customers in separate
+			// interfaces.
+			EmployeeID employee = (EmployeeID) bankUser;
+			return employee;
+		}
+		return null;
+	}
+
 	public void run() {
 		menuPrinter.printLogo();
 		// keep getting requests from the client and processing them
 		try {
 			out.println("Welcome to NewBank");
+			BankUserID bankUser = null;
+			bankUser = login();
 			CustomerID customer = null;
-			customer = login();
-			if (customer != null) {
+			EmployeeID employee = null;
+			if (bankUser != null) {
 				out.println("Log In Successful. What do you want to do?");
-				menuPrinter.printOptions();
+				if (isEmployee(bankUser) != null){
+					employee = isEmployee(bankUser);
+					menuPrinter.printOptions("employee");
+				}
+				else {
+					customer = (CustomerID) bankUser;
+					menuPrinter.printOptions("customer");
+				}
+
 				while (true) {
 					String request = in.readLine();
-					System.out.println("Request from " + customer.getKey());
-					processRequest(customer, request);
+					if (employee != null){
+						processEmployeeRequest(employee, request);
+					}
+					else {
+						processRequest(customer, request);
+					}
 				}
 
 			} else {
@@ -207,7 +232,7 @@ public class NewBankClientHandler extends Thread {
 				String userName = in.readLine();
 				out.println("Enter your current password");
 				String currentPassword = in.readLine();
-				CustomerID PasswordChange = bank.checkLogInDetails(userName, currentPassword);
+				CustomerID PasswordChange = bank.checkCustomerLogInDetails(userName, currentPassword);
 				if (customer == null) {
 					out.println("user not recognized");
 				} else {

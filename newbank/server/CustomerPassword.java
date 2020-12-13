@@ -1,6 +1,5 @@
 package newbank.server;
 
-
 public class CustomerPassword {
     private String password;
 
