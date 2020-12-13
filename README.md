@@ -25,7 +25,7 @@ Changing Passwords- Clients now have the functionality to update their password 
 logOut- Clients can log out of Example Client upon completion of their session.<br>
 Catching Password null loops- After three incorrect password entries, example client will now automatically close in order to prevent further password attempts from a user.<br>
 Printing Account Balances to text – Clients can now print their Account balances to a local saved text file (works on both Windows and Mac OS).
-  
+
 Employees can interact with the bank by using any of the following commands:
 
 * CREATEACCOUNT
@@ -45,7 +45,3 @@ See also the list of [contributors](https://github.com/carolinamartes/new_bank_g
 ## License
 
 This project is licensed under the MIT License.
-
-
- 
- 
