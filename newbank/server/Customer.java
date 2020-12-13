@@ -77,4 +77,13 @@ public class Customer extends BankUser {
 	public void addAccount(Account account) {
 		accounts.add(account);
 	}
+
+	public void removeAccount(AccountType accountType){
+		for(Account a : accounts){
+			if (a.getAccountType() == accountType){
+				int index = accounts.indexOf(a);
+				accounts.remove(index);
+			}
+		}
+	}
 }

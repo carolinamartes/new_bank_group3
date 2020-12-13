@@ -10,7 +10,10 @@ public class NewBank {
 		"MOVEMYMONEY",
 		"WITHDRAW",
 		"DEPOSIT",
-		"NEWACCOUNT",
+		"CREATEMAIN",
+		"CREATESAVING",
+		"CREATECHECKING",
+		"CLOSEACCOUNT",
 		"LOGOUT"
 	};
 
@@ -173,6 +176,25 @@ public class NewBank {
 	public static void createAccount(String customerName){
 		AccountType mainAccountType = new AccountType("Main");
 		customers.get(customerName).addAccount(new Account(mainAccountType, 0));
+	}
+
+	public static void createMain(CustomerID customer, double requestAmount){
+		AccountType mainAccountType = new AccountType("Main");
+		customers.get(customer.getKey()).addAccount(new Account(mainAccountType, requestAmount));
+	}
+
+	public static void removeAccount(CustomerID customer, AccountType accountType){
+		customers.get(customer.getKey()).removeAccount(accountType);
+	}
+
+	public static void createSaving(CustomerID customer, double requestAmount){
+		AccountType savingAccountType = new AccountType("Saving");
+		customers.get(customer.getKey()).addAccount(new Account(savingAccountType, requestAmount));
+	}
+
+	public static void createChecking(CustomerID customer, double requestAmount){
+		AccountType checkingAccountType = new AccountType("Checking");
+		customers.get(customer.getKey()).addAccount(new Account(checkingAccountType, requestAmount));
 	}
 }
  

@@ -163,6 +163,50 @@ public class NewBankClientHandler extends Thread {
 			}
 			return;
 		}
+		if (request.startsWith("NEWMAIN")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWMAIN ");
+			if (validAmount) {
+				bank.createMain(customer, requestAmount);
+				state.push("CREATEMAIN");
+			}
+			return;
+		}
+		if (request.startsWith("NEWSAVING")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWSAVING ");
+			if (validAmount) {
+				bank.createSaving(customer, requestAmount);
+				state.push("CREATESAVING");
+			}
+			return;
+		}
+		if (request.startsWith("NEWCHECKING")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWCHECKING ");
+			if (validAmount) {
+				bank.createChecking(customer, requestAmount);
+				state.push("CREATECHECKING");
+			}
+			return;
+		}
+		if (request.startsWith("DELETEACCOUNT")) {
+			AccountType mainAccountType = new AccountType("Main");
+			AccountType savingAccountType = new AccountType("Saving");
+			AccountType checkingAccountType = new AccountType("Checking");
+			String requestString = request;
+			String choice = requestString.replace("DELETEACCOUNT ", "");
+			if (choice.equals("MAIN")) {
+				bank.removeAccount(customer, mainAccountType);
+				state.push("CLOSEACCOUNT");
+			}
+			if (choice.equals("SAVING")){
+				bank.removeAccount(customer, savingAccountType);
+				state.push("CLOSEACCOUNT");
+			}
+			if (choice.equals("CHECKING")){
+				bank.removeAccount(customer, checkingAccountType);
+				state.push("CLOSEACCOUNT");
+			}
+			return;
+		}
 		switch (request) {
 			case "SENDMONEY" :
 				menuPrinter.askSendQuantity();
@@ -221,6 +265,22 @@ public class NewBankClientHandler extends Thread {
 				menuPrinter.printNewAccountsPg1();
 				state.push(request);
 				break;
+			case "CREATEMAIN" :
+				menuPrinter.askMainAmount();
+				state.push(request);
+				break;
+			case "CREATESAVING" :
+				menuPrinter.askSavingAmount();
+				state.push(request);
+				break;
+			case "CREATECHECKING" :
+				menuPrinter.askCheckingAmount();
+				state.push(request);
+				break;
+			case "CLOSEACCOUNT" :
+				menuPrinter.askAccountType();
+				state.push(request);
+				break;
 			case "LOGOUT" :
 				menuPrinter.printLogOut();
 				state.push(request);
@@ -254,6 +314,18 @@ public class NewBankClientHandler extends Thread {
 				}
 				if (state.peek().equals("DEPOSIT")){
 					bank.executeDeposit(customer, toAccountIndex, requestAmount);
+					break;
+				}
+				if (state.peek().equals("CREATEMAIN")){
+					bank.createMain(customer, requestAmount);
+					break;
+				}
+				if (state.peek().equals("CREATESAVING")){
+					bank.createSaving(customer, requestAmount);
+					break;
+				}
+				if (state.peek().equals("CREATECHECKING")){
+					bank.createChecking(customer, requestAmount);
 					break;
 				}
 				else {
