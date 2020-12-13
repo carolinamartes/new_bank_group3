@@ -1,13 +1,7 @@
 package newbank.server;
 
-public class CustomerID {
-	private String key;
-	
+public class CustomerID extends BankUserID {
 	public CustomerID(String key) {
-		this.key = key;
-	}
-	
-	public String getKey() {
-		return key;
+		super(key);
 	}
 }
