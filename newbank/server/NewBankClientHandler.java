@@ -193,15 +193,15 @@ public class NewBankClientHandler extends Thread {
 			AccountType checkingAccountType = new AccountType("Checking");
 			String requestString = request;
 			String choice = requestString.replace("DELETEACCOUNT ", "");
-			if (choice == "MAIN") {
+			if (choice.equals("MAIN")) {
 				bank.removeAccount(customer, mainAccountType);
 				state.push("CLOSEACCOUNT");
 			}
-			if (choice == "SAVING"){
+			if (choice.equals("SAVING")){
 				bank.removeAccount(customer, savingAccountType);
 				state.push("CLOSEACCOUNT");
 			}
-			if (choice == "CHECKING"){
+			if (choice.equals("CHECKING")){
 				bank.removeAccount(customer, checkingAccountType);
 			}
 			return;
