@@ -10,7 +10,10 @@ public class NewBank {
 		"MOVEMYMONEY",
 		"WITHDRAW",
 		"DEPOSIT",
-		"NEWACCOUNT",
+		"CREATEMAIN",
+		"CREATESAVING",
+		"CREATECHECKING",
+		"CLOSEACCOUNT",
 		"LOGOUT"
 	};
 	private static final NewBank bank = new NewBank();

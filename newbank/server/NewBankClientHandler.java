@@ -146,16 +146,16 @@ public class NewBankClientHandler extends Thread {
 			}
 			return;
 		}
-		if (request.startsWith("NEWSAVINGS")) {
-			boolean validAmount = checkIfValidAmountFormat(request, "NEWMAIN ");
+		if (request.startsWith("NEWSAVING")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWSAVING ");
 			if (validAmount) {
 				bank.createSaving(customer, requestAmount);
-				state.push("CREATESAVINGS");
+				state.push("CREATESAVING");
 			}
 			return;
 		}
 		if (request.startsWith("NEWCHECKING")) {
-			boolean validAmount = checkIfValidAmountFormat(request, "NEWMAIN ");
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWCHECKING ");
 			if (validAmount) {
 				bank.createChecking(customer, requestAmount);
 				state.push("CREATECHECKING");
