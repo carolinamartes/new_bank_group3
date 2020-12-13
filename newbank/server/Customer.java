@@ -77,4 +77,16 @@ public class Customer {
 	public void addAccount(Account account) {
 		accounts.add(account);
 	}
+
+	public void freezeAccounts() {
+		for (int i = accounts.size(); i > 0; i --) {
+			accounts.get(i).freezeAccount();
+		}
+	}
+	public void unfreezeAccounts() {
+		for (int i = accounts.size(); i > 0; i --) {
+			accounts.get(i).unfreezeAccount();
+		}
+
+	}
 }

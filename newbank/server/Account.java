@@ -5,6 +5,7 @@ public class Account {
 	private AccountType accountType;
 	private double openingBalance;
 	private double currentBalance;
+	private boolean isFrozen = false;
 
 	public Account(AccountType accountType, double openingBalance) {
 		this.accountType = accountType;
@@ -30,6 +31,13 @@ public class Account {
 
 	public String toString() {
 		return (accountType.getKey() + ": " + currentBalance);
+	}
+
+	public void freezeAccount() {
+		isFrozen = true;
+	}
+	public void unfreezeAccount() {
+		isFrozen = false;
 	}
 
 }

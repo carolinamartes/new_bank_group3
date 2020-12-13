@@ -155,5 +155,12 @@ public class NewBank {
 		AccountType mainAccountType = new AccountType("Main");
 		customers.get(customerName).addAccount(new Account(mainAccountType, 0));
 	}
+
+	public void freezeAccounts(CustomerID customer, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).freezeAccounts();
+	}
+	public void unfreezeAccounts(CustomerID customer, MenuPrinter menuPrinter) {
+		customers.get(customer.getKey()).unfreezeAccounts();
+	}
 }
  
