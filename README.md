@@ -15,7 +15,10 @@ Customers can interact with the bank by using any of the following commands:
 * MOVEMYMONEY
 * WITHDRAW
 * DEPOSIT
-* NEWACCOUNT
+* NEWMAIN
+* NEWSAVING
+* NEWCHECKING
+* CLOSEACCOUNT
 * LOGOUT
 * CHANGEPASSWORD
 
