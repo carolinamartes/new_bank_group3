@@ -36,17 +36,17 @@ public class NewBank {
 		AccountType savingAccountType = new AccountType("Saving");
 		AccountType checkingAccountType = new AccountType("Checking");
 
-		Customer bhagy = new Customer(01);
+		Customer bhagy = new Customer(new CustomerID("01"));
 		bhagy.addAccount(new Account(mainAccountType, 1000.0));
 		customers.put("Bhagy", bhagy);
 		LoginCred.put("Bhagy",new CustomerPassword("Bhagy1234"));
 
-		Customer christina = new Customer(02);
+		Customer christina = new Customer(new CustomerID("02"));
 		christina.addAccount(new Account(savingAccountType, 1500.0));
 		customers.put("Christina", christina);
 		LoginCred.put("Christina",new CustomerPassword("Christina1234"));
 
-		Customer john = new Customer(03);
+		Customer john = new Customer(new CustomerID("03"));
 		john.addAccount(new Account(checkingAccountType, 250.0));
 		john.addAccount(new Account(savingAccountType, 500));
 		john.addAccount(new Account(mainAccountType, 2000));
@@ -143,8 +143,10 @@ public class NewBank {
 		if(customers.containsKey(userName)) {
 			System.out.println("User already exists.");
 		}
-		else{
-			Customer newCustomer = new Customer(customers.size()+1);
+		else {
+			String nextID = Integer.toString(customers.size()+1);
+			CustomerID customerID = new CustomerID(nextID);
+			Customer newCustomer = new Customer(customerID);
 			customers.put(userName, newCustomer);
 			String password = userName + "123";
 			LoginCred.put(userName,new CustomerPassword(password));

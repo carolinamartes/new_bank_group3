@@ -15,6 +15,9 @@ public class NewBankServer extends Thread{
 	public void run() {
 		// starts up a new client handler thread to receive incoming connections and process requests
 		System.out.println("New Bank Server listening on " + server.getLocalPort());
+		//  To run tests, uncomment the next two lines
+		//	TestRunner tr = new TestRunner();
+		//	tr.main();
 		try {
 			while(true) {
 				Socket s = server.accept();

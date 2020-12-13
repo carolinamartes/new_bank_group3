@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 public class Customer {
 	private ArrayList<Account> accounts;
-	private Integer ID;
+	private CustomerID ID;
 	private String CustomerPassword;
 	
-	public Customer(Integer ID) {
+	public Customer(CustomerID ID) {
 		accounts = new ArrayList<Account>();
 		this.ID = ID;
 	}
 
-	public Integer ID(){
+	public CustomerID ID(){
 		return ID;
 	}
 
@@ -76,5 +76,13 @@ public class Customer {
 
 	public void addAccount(Account account) {
 		accounts.add(account);
+	}
+
+	public int getAccountCount(){
+		return accounts.size();
+	}
+
+	public Account getAccount(int accountID){
+		return accounts.get(accountID);
 	}
 }
