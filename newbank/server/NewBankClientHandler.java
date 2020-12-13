@@ -203,6 +203,7 @@ public class NewBankClientHandler extends Thread {
 			}
 			if (choice.equals("CHECKING")){
 				bank.removeAccount(customer, checkingAccountType);
+				state.push("CLOSEACCOUNT");
 			}
 			return;
 		}
