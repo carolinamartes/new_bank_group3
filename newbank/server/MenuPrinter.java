@@ -37,8 +37,12 @@ public class MenuPrinter {
         out.println();
     }
 
-    public static void printOptions(){
-        for (String command : NewBank.commands) {
+    public static void printOptions(String user){
+        String [] commands = NewBank.customerCommands;
+        if (user == "employee"){
+            commands = NewBank.employeeCommands;
+        }
+        for (String command : commands) {
             out.print(" •  ");
             out.println(command);
         }
