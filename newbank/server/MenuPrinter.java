@@ -181,6 +181,18 @@ public class MenuPrinter {
         out.println("Enter the customer's name to create a new customer. Write NEWCUSTOMER {{username}}");
     }
 
+    public static void askMainAmount(){
+        out.println("How much would you like to deposit into your new Main account. Write NEWMAIN {{amount}}");
+    }
+
+    public static void askSavingAmount(){
+        out.println("How much would you like to deposit into your new Savings account. Write NEWSAVING {{amount}}");
+    }
+
+    public static void askCheckingAmount(){
+        out.println("How much would you like to deposit into your new Checking account. Write NEWCHECKING {{amount}}");
+    }
+
     public static void printLogOut(){
         out.println("Are you sure you want to log out? (y/n)");
     }

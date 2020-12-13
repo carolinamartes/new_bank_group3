@@ -138,6 +138,30 @@ public class NewBankClientHandler extends Thread {
 			}
 			return;
 		}
+		if (request.startsWith("NEWMAIN")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWMAIN ");
+			if (validAmount) {
+				bank.createMain(customer, requestAmount);
+				state.push("CREATEMAIN");
+			}
+			return;
+		}
+		if (request.startsWith("NEWSAVINGS")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWMAIN ");
+			if (validAmount) {
+				bank.createSaving(customer, requestAmount);
+				state.push("CREATESAVINGS");
+			}
+			return;
+		}
+		if (request.startsWith("NEWCHECKING")) {
+			boolean validAmount = checkIfValidAmountFormat(request, "NEWMAIN ");
+			if (validAmount) {
+				bank.createChecking(customer, requestAmount);
+				state.push("CREATECHECKING");
+			}
+			return;
+		}
 		switch (request) {
 			case "SENDMONEY" :
 				menuPrinter.askSendQuantity();
@@ -196,6 +220,18 @@ public class NewBankClientHandler extends Thread {
 				menuPrinter.printNewAccountsPg1();
 				state.push(request);
 				break;
+			case "CREATEMAIN" :
+				menuPrinter.askMainAmount();
+				state.push(request);
+				break;
+			case "CREATESAVING" :
+				menuPrinter.askSavingAmount();
+				state.push(request);
+				break;
+			case "CREATECHECKING" :
+				menuPrinter.askCheckingAmount();
+				state.push(request);
+				break;
 			case "LOGOUT" :
 				menuPrinter.printLogOut();
 				state.push(request);
@@ -229,6 +265,18 @@ public class NewBankClientHandler extends Thread {
 				}
 				if (state.peek().equals("DEPOSIT")){
 					bank.executeDeposit(customer, toAccountIndex, requestAmount);
+					break;
+				}
+				if (state.peek().equals("CREATEMAIN")){
+					bank.createMain(customer, requestAmount);
+					break;
+				}
+				if (state.peek().equals("CREATESAVING")){
+					bank.createSaving(customer, requestAmount);
+					break;
+				}
+				if (state.peek().equals("CREATECHECKING")){
+					bank.createChecking(customer, requestAmount);
 					break;
 				}
 				else {
